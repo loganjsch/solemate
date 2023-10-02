@@ -2,10 +2,13 @@
 
 Charles Moreno 
 cmoren30@calpoly.edu
+
 Shawn Gill
 sgill33@calpoly.edu
+
 Logan Schwarz 
 lschwa06@calpoly.edu
+
 Rohit Bathula
 rbathula@calpoly.edu
 
