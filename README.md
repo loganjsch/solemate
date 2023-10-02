@@ -1,4 +1,4 @@
-# 365groupproj
+# Solemate
 
 Charles Moreno 
 cmoren30@calpoly.edu
