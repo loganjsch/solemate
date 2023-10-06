@@ -4,9 +4,9 @@ As an active college student, I want shoes that are comfortable for my wide feet
 Shoe Customer (split into style, comfortability, price, etc)
 
   As a user, I want to input my preferences, so that the site can find the right shoe for me.
-  As a user, I want to be able to make a profile that keeps track of my history of interactions with Solemate.
-  As a user, I want to be able to search up shoes that I am interested in.
-  As a user, I want to be able to compare my current shoe to potential shoes.
+  \As a user, I want to be able to make a profile that keeps track of my history of interactions with Solemate.
+  \As a user, I want to be able to search up shoes that I am interested in.
+  \As a user, I want to be able to compare my current shoe to potential shoes.
 
 Shoe Wearer 
 
