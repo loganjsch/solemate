@@ -1,7 +1,7 @@
 As an active college student, I want shoes that are comfortable for my wide feet and will prevent pain from walking around too much.
 
 
-Shoe Customer
+Shoe Customer (split into style, comfortability, price, etc)
 
   As a user, I want to input my preferences, so that the site can find the right shoe for me.
 
