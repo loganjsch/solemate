@@ -9,3 +9,9 @@ Shoe Wearer
 
   As a user, I want to post the current shoe I'm using and like, so that that the site can better understand my preference.
 
+Shoe Copmany
+
+  As a shoe company I want to be able to post my shoe to the site so that people will buy it and make me rich.
+
+
+Exceptions
