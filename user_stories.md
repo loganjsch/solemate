@@ -13,5 +13,9 @@ Shoe Copmany
 
   As a shoe company I want to be able to post my shoe to the site so that people will buy it and make me rich.
 
+Wholesale Retailar
+
+  As a manager in charge of a store that seels shoes, I want to be able to see which shoes are currently trending.
+
 
 Exceptions
