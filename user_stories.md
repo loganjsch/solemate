@@ -4,6 +4,7 @@ As an active college student, I want shoes that are comfortable for my wide feet
 Shoe Customer (split into style, comfortability, price, etc)
 
   As a user, I want to input my preferences, so that the site can find the right shoe for me.
+  As a user, I want to be able to make a profile that keeps track of my history of interactions with Solemate.
 
 Shoe Wearer 
 
@@ -15,7 +16,9 @@ Shoe Copmany
 
 Wholesale Retailar
 
-  As a manager in charge of a store that seels shoes, I want to be able to see which shoes are currently trending.
+  As a manager in charge of a store that sells shoes, I want to be able to see which shoes are currently trending so that I can focus on selling those shoes and make money.
+
+
 
 
 Exceptions
