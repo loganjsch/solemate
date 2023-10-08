@@ -40,13 +40,13 @@
 - Incorrect Shoe Info:  
   If a shoe manufacturer enters the details of a shoe incorrectly when uploading a shoe, they can go back and edit the details
 - Hitting Character Limit:  
-  If a user reaches the character limit of a review, they will be notified that they can no longer type more characters
+  If a user doesn't write enough characters or reaches the character limit of a review, they will be notified that they can no longer type more characters
 - User Posts Profane Comments:  
   If a user's comment has profanity or anything inappropriate, the review will be flagged and not posted
 - User Adds Wrong Shoe To Their Page:  
   If a user mistakenly adds a shoe to their profile, they can remove the shoe from their profile
 - Username Already Taken:  
-  If a username is already in use by another user, the user signing up will be informed
+  If a username is already in use by another user, the user signing up will be informed and promopted to try to choose a different valid username.
 - Password Too Short:  
   If a user tries creating a password under 8 characters, they will be told to come up with a longer password
 - User Can't Load Photos On Their End:  
