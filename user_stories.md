@@ -50,7 +50,7 @@
 - Password Too Short:  
   If a user tries creating a password under 8 characters, they will be told to come up with a longer password
 - User Can't Load Photos On Their End:  
-  Photos will be replaced with simple text description
+  If the users cant load photos, the photos will be replaced with simple text description
 
   
   
