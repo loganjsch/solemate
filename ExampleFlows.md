@@ -1,5 +1,5 @@
 ## User wants to leave a review for a pair of shoes that they own.
-Daniel, a hypebeast, hates his new pair of Nike airforce 1's. He has already posted his shoe onto the site. First, he navigates to this shoe's page, either via the search function or through his profile and his posted shoes. On the shoes page, the site shows all other user reviews. He clicks post review button, then he clicks 1 star out of 5, and writes his review. Then he clicks submit, and his review now shows up on the shoe page and under his profile in 'my reviews.'
+Daniel, a hypebeast, hates his new pair of Nike airforce 1's. He has already posted his shoe onto the site. First, he navigates to this shoe's page, either via the search function or through his profile and his posted shoes. On the shoes page at /shoes/{shoe_id}, the site shows all other user reviews. He clicks post review button, then he clicks 1 star out of 5, and writes his review. Then he clicks submit, and his review now shows up on the shoe page and under his profile at /users/{user_id}/ratings.
 
 ## User wants to search for a shoe to buy.
 
