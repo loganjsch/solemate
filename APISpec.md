@@ -198,15 +198,15 @@ Initiates a comparison between two shoes
 
 **Returns**:
 ``` json
-[
-    {
-        "shoe_ids": ["integer", "integer"],
-        "shoe_names": ["string","string"],
-        "brands": ["string","string"],
-        "fits": ["string","string"],
-        "retail_prices": ["integer","integer"],
-        "ratings": ["integer","integer"],
-    }
-]
+
+{
+    "shoe_ids": ["integer", "integer"],
+    "shoe_names": ["string","string"],
+    "brands": ["string","string"],
+    "fits": ["string","string"],
+    "retail_prices": ["integer","integer"],
+    "ratings": ["integer","integer"],
+}
+
 ```
 
