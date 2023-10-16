@@ -2,16 +2,28 @@
 
 ## 1. New Customer creates an Account
 
-1. 'New User'
+1. `New User`
 
 ### 1.1 New User - '/users/{user_id}' (POST)
-Returns the username, email and password of the new user.
+
+Returns the username, user id, email and password of the new user.
+
+**Request**:
+
+```json
+{
+    "username": "string",
+    "email": "string",
+    "password": "string",
+    "user_id": "string"
+}
+```
 
 ## 2. Customer Rates a Shoe They Own
 
 The API calls are made in this sequence when rating a shoe:
-3. `Get Shoe`
-4. `New Rating`
+2. `Get Shoe`
+3. `New Rating`
 
 ### 2.1. Shoe Info - `/shoes/{shoe_id}` (GET)
 
