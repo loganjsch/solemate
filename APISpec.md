@@ -15,8 +15,8 @@ Returns the name, fit, and brand of the shoe.
     "shoe_name": "string",
     "brand": "string",
     "fit": "string",
-
-  
+    "price_range": "string"
+    "available_price": "float"
 }
 ```
 ### 1.2 New Rating - '/ratings/{rating_id}' (POST)
@@ -69,4 +69,21 @@ Browse a specific user's ratings.
 }
 ```
 
-   
+## 4. Company posts shoe to website
+
+5. 'New Shoe'
+
+### 4.1 New User - '/shoes/{shoe_id}' (POST)
+
+Browse a specific user's ratings.
+
+**Request**:
+
+```json
+{
+    "shoe_name": "string",
+    "brand": "string",
+    "fit": "string",
+    "price": "float"
+}
+```
