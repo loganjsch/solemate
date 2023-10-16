@@ -12,7 +12,7 @@ Then he calls GET /search/users with the value "ShoeGod" to look up the account 
 He sees the correct account and click on it, which calls GET /users/{user_id}/.
 While scrolling through them, he notices a pair of shoes he likes that are rated highly,
 so he decides to click on them, which calls GET /shoes/{shoe_id}.
-Finally, he decided that these are the shoes for him and saves them to his profile by calling POST /shoes/add by entering in their shoe id.
+Finally, he decided that these are the shoes for him and buys them from Footlocker. Afterwards, hesaves them to his profile catalog by calling POST /shoes/add and entering in their shoe id.
 
 ## User wants to compare two shoes
 
