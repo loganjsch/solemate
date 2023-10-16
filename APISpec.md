@@ -1,25 +1,39 @@
 # API Specification
 
-## 1. Customer Rates a Shoe They Own
+# 1. Account Creation
 
-The API calls are made in this sequence when rating a show:
-1. `Get Shoe`
-2. `New Rating`
+## 1.1 Create Account - `/account/` (POST)
 
-### 1.1. Shoe Info - `/shoes/{shoe_id}` (GET)
-
-Returns the name, fit, and brand of the shoe.
+**Request**:
 
 ```json
 {
+    "username": "string",
+    "email": "string",
+    "password": "string",
+}
+```
+# 2. Get Shoe Info
+
+## 2.1. Get Shoe - `/shoe/{shoe_id}` (GET)
+
+Returns shoe info for the shoe you are looking at
+
+```json
+{
+    "shoe_id": "integer",
     "shoe_name": "string",
     "brand": "string",
     "fit": "string",
-
-  
+    "retail_price": "integer",
+    "num_reviews": "integer",
+    "rating": "integer"
 }
 ```
-### 1.2 New Rating - '/ratings/'
+
+# 3. Leave Rating
+
+## 3.1 Leave Rating - `/shoe/{shoe_id}/rate` (POST)
 
 Creates a new rating for a specific shoe.
 
@@ -27,7 +41,6 @@ Creates a new rating for a specific shoe.
 
 ```json
 {
-    "shoe_id": "string",
     "rating": "integer",
     "comments": "string",
     "username": "string"
@@ -35,10 +48,114 @@ Creates a new rating for a specific shoe.
 ```
 
 
-## 2. Customer Browses an Influencer's Reviews
+# 4. View Ratings
 
-The API calls are made in this sequence when a customer wants to look through another's reviews:
+## 4.1 Get Reviews  - `/shoes/{shoe_id}/reviews` (GET)
+Returns all reviews and their contents for a certain shoe
 
-3. `Get User`
+**Returns**:
 
+```json
+[
+    {
+        "rating": "integer",
+        "comments": "string",
+        "username": "string"
+    }
+]
+```
+
+# 5. Search
+
+## 5.1 Search Shoe - `/search/shoes/{search_value}` (GET)
+Returns shoes that match your search value
+
+**Request**:
+```json
+{
+    
+    "search_value": "string", 
+}
+```
+
+**Returns**:
+```json
+[
+    {
+        "shoe_id": integer
+        "shoe_name": "string", 
+        "brand": "string",
+    }
+
+]
+```
+
+## 5.2 Search Users - `/search/users/{search_value}` (GET)
+Returns users based on your search
+
+**Request**:
+```json
+{
+    
+    "search_value": "string", 
+}
+```
+
+**Returns**:
+```json
+[
+    {
+        "username": integer
+    }
+
+]
+```
+
+# 6. Post Shoe
+
+## 6.1 Post Shoe - '/post/' (POST)
+
+Adds new shoe to website
+
+**Request**:
+
+```json
+{
+    "shoe_name": "string",
+    "brand": "string",
+    "fit": "string",
+    "retail_price": "integer",
+}
+```
+
+# 7. Add Shoes
+
+## 7.1 Add Shoe - `/shoes/add` (POST)
+Adds requested shoe to your profile shoe catalog
+
+**Request**:
+
+```json
+{
+    "shoe_id": "integer",
+}
+```
+
+# 8. Get Account Info:
+
+## 8.1. Get Account - `/users/{user_id}` (GET)
+
+Returns shoe catalog of the user profile you're viewing
+
+**Returns**:
+```json
+[
+    {
+        "shoe_id": integer
+        "shoe_name": "string", 
+        "brand": "string",
+    }
+
+]
+```
    
