@@ -15,6 +15,7 @@ Returns the name, fit, and brand of the shoe.
     "shoe_name": "string",
     "brand": "string",
     "fit": "string",
+
   
 }
 ```
@@ -34,10 +35,10 @@ Creates a new rating for a specific shoe.
 ```
 
 
-## 2. Customer Searching
+## 2. Customer Browses an Influencer's Reviews
 
-The API calls are made in this sequence when searchinig for a show:
+The API calls are made in this sequence when a customer wants to look through another's reviews:
 
-5. `Add Item to Cart` (Can be called multiple times)
-6. `Checkout Cart`
+3. `Get User`
+
    
