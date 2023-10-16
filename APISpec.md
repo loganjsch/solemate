@@ -26,9 +26,10 @@ Creates a new rating for a specific shoe.
 
 ```json
 {
-  "rating": "integer",
-   "comments": "string",
-   "username": "string"
+    "shoe_id": "string",
+    "rating": "integer",
+    "comments": "string",
+    "username": "string"
 }
 ```
 
