@@ -1,27 +1,14 @@
 # API Specification
 
-## 1. Customer Browsing
+## 1. Customer Rates a Shoe They Own
 
-The API calls are made in this sequence when browsing for shoes and liking one:
-1. `Get Catalog`
-2. `New Cart`
-3. `Add Item to Cart` (Can be called multiple times)
-4. `Checkout Cart`
-
-## 2. Customer Searching
-
-The API calls are made in this sequence when searchinig for a show:
-
-5. `Add Item to Cart` (Can be called multiple times)
-6. `Checkout Cart`
-   
-### 1.1. Reset Shop - `/admin/reset` (POST)
-
-A call to reset shop will delete all inventory and in-flight carts and reset gold back to 100.
+The API calls are made in this sequence when rating a show:
+1. `Get Shoe`
+2. `New Rating`
 
 ### 1.1. Shoe Info - `/shoes/{shoe_id}` (GET)
 
-Returns the name, fit, manufacturer of the shoe.
+Returns the name, fit, and brand of the shoe.
 
 ```json
 {
@@ -31,3 +18,25 @@ Returns the name, fit, manufacturer of the shoe.
   
 }
 ```
+### 1.2 New Rating - '/ratings/'
+
+Creates a new rating for a specific shoe.
+
+**Request**:
+
+```json
+{
+  "rating": "integer",
+   "comments": "string",
+   "username": "string"
+}
+```
+
+
+## 2. Customer Searching
+
+The API calls are made in this sequence when searchinig for a show:
+
+5. `Add Item to Cart` (Can be called multiple times)
+6. `Checkout Cart`
+   
