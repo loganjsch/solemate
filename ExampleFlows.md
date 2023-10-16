@@ -1,11 +1,10 @@
 ## User wants to leave a review for a pair of shoes that they own.
-Daniel, a hypebeast, hates his new pair of Nike Airforce 1's. He has already posted his shoe on the site. First, he navigates to this shoe's page, either via the search function or through his profile and his posted shoes. On the shoes page at /shoes/{shoe_id}, the site shows all other user reviews with /shoes/{shoe_id}/reviews (GET). He clicks the post review button, which shows the review menu then he clicks 1 star out of 5, and writes his review. Then he clicks submit which is - /shoe/{shoe_id}/rate (POST), and his review now shows up on the shoe page /shoes/{shoe_id}/reviews (GET)
+Daniel, a hypebeast, hates his new pair of Nike Airforce 1's. He has already posted his shoe on the site. First, he navigates to his shoe page via his profile by calling /user/{user_id}/catalog and sees all his shoes. On the shoe page at he calls /shoes/{shoe_id} (GET) endpoint to get the Nike Airforce 1's. From there he calls /shoes/{shoe_id}/reviews (GET) to see all the reviews on the shoe. He called the /shoe/{shoe_id}/rate endpoint when he clicked the rate button, which shows the review menu then he clicks 1 star out of 5, and writes his review. Then he clicks submit which is - /shoe/{shoe_id}/rate (POST), and his review now shows up on the shoe page when /shoes/{shoe_id}/reviews (GET) is called.
 
 ## User wants to search for a shoe to buy.
 
 Daniel the hypebeast comes to Solemate because he is researching what type of shoe he should get next. He starts
-by browsing through the initial shoes shown on the home screen but is still unsure. He decides to browse the reviews of a trusted source before making his decision.
-First, Daniel requests a catalog of the website's shoe library by calling GET /shoes/catalog.
+by browsing through the initial shoes shown on the home screen but is still unsure. He decides to browse the reviews of a trusted source before making his decision. First, Daniel requests a catalog of the website's shoe library by calling GET /shoes/catalog.
 Daniel sees some pretty cool-looking shoes in the catalog, but none seem to match his taste. 
 He then thinks of the influencer ShoeGod who recommended his website and decided to check out his account.
 Then he calls GET /search/users with the value "ShoeGod" to look up the account of the influencer he wanted.
