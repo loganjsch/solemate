@@ -2,7 +2,7 @@
 
 ## 1. Customer Rates a Shoe They Own
 
-The API calls are made in this sequence when rating a show:
+The API calls are made in this sequence when rating a shoe:
 1. `Get Shoe`
 2. `New Rating`
 
@@ -54,7 +54,7 @@ Deletes the review of an user of the shoe.
 
 4. 'Get UserRatings'
 
-### 3.1 Get User - '/users/{user_id}/ratings' (GET)
+### 3.1 Get UserRatings - '/users/{user_id}/ratings' (GET)
 
 Browse a specific user's ratings.
 
@@ -73,9 +73,9 @@ Browse a specific user's ratings.
 
 5. 'New Shoe'
 
-### 4.1 New User - '/shoes/{shoe_id}' (POST)
+### 4.1 New Shoe - '/shoes/{shoe_id}' (POST)
 
-Browse a specific user's ratings.
+Creates a new shoe.
 
 **Request**:
 
