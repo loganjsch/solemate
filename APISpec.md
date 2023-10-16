@@ -34,11 +34,11 @@ Creates a new rating for a specific shoe.
 }
 ```
 
-## 3. Customer Deletes a Review
+## 2. Customer Deletes a Review
 
-4. 'Get UserRatings'
+3. 'Delete UserRating'
 
-### 3.1 Get User - '/{shoe_id}/ratings/{rating_id}' (DELETE)
+### 2.1 Delete UserRating - '/{shoe_id}/ratings/{rating_id}' (DELETE)
 
 Deletes the review of an user of the shoe.
 
