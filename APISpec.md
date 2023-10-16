@@ -1,14 +1,23 @@
 # API Specification
 
-## 1. Customer Rates a Shoe They Own
+## 1. New Customer creates an Account
+
+1. 'New User'
+
+### 1.1 New User - '/users/{user_id}' (POST)
+Returns the username, email and password of the new user.
+
+## 2. Customer Rates a Shoe They Own
 
 The API calls are made in this sequence when rating a shoe:
-1. `Get Shoe`
-2. `New Rating`
+3. `Get Shoe`
+4. `New Rating`
 
-### 1.1. Shoe Info - `/shoes/{shoe_id}` (GET)
+### 2.1. Shoe Info - `/shoes/{shoe_id}` (GET)
 
 Returns the name, fit, and brand of the shoe.
+
+**Request**:
 
 ```json
 {
@@ -19,7 +28,7 @@ Returns the name, fit, and brand of the shoe.
     "available_price": "float"
 }
 ```
-### 1.2 New Rating - '/ratings/{rating_id}' (POST)
+### 2.2 New Rating - '/ratings/{rating_id}' (POST)
 
 Creates a new rating for a specific shoe.
 
@@ -34,11 +43,11 @@ Creates a new rating for a specific shoe.
 }
 ```
 
-## 2. Customer Deletes a Review
+## 3. Customer Deletes a Review
 
-3. 'Delete UserRating'
+4. 'Delete UserRating'
 
-### 2.1 Delete UserRating - '/{shoe_id}/ratings/{rating_id}' (DELETE)
+### 3.1 Delete UserRating - '/{shoe_id}/ratings/{rating_id}' (DELETE)
 
 Deletes the review of an user of the shoe.
 
@@ -50,11 +59,11 @@ Deletes the review of an user of the shoe.
 }
 ```
 
-## 3. Customer Browses Another User's Reviews
+## 4. Customer Browses Another User's Reviews
 
-4. 'Get UserRatings'
+5. 'Get UserRatings'
 
-### 3.1 Get UserRatings - '/users/{user_id}/ratings' (GET)
+### 4.1 Get UserRatings - '/users/{user_id}/ratings' (GET)
 
 Browse a specific user's ratings.
 
@@ -69,11 +78,11 @@ Browse a specific user's ratings.
 }
 ```
 
-## 4. Company posts shoe to website
+## 5. Company posts shoe to website
 
-5. 'New Shoe'
+6. 'New Shoe'
 
-### 4.1 New Shoe - '/shoes/{shoe_id}' (POST)
+### 5.1 New Shoe - '/shoes/{shoe_id}' (POST)
 
 Creates a new shoe.
 
