@@ -23,6 +23,7 @@ Returns the username, user id, email and password of the new user.
 
 The API calls are made in this sequence when rating a shoe:  
 2. `Get Shoe`  
+
 3. `New Rating`
 
 ### 2.1. Shoe Info - `/shoes/{shoe_id}` (GET)
