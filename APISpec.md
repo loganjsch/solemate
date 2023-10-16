@@ -150,7 +150,7 @@ Adds requested shoe to your profile shoe catalog
 
 # 8. Get Account Info:
 
-## 8.1. Get Account Catalog - `/users/{user_id}` (GET)
+## 8.1. Get Account Catalog - `/users/{user_id}/catalog` (GET)
 
 Returns information of the user profile you're viewing
 
@@ -167,21 +167,22 @@ Returns information of the user profile you're viewing
 ]
 ```
 
-# 9. Get Shoe Catalog:
+# 9. Get Entire Shoe Catalog:
 
 ## 9.1. Get Shoe Catalog - `/shoes/catalog` (GET)
 
-Returns shoe catalog of the website's shoe library.
+Returns shoe catalog of the entire website's shoe library.
 
 **Returns**:
 ```json
-
+[
     {
         "shoe_id": "integer"
         "shoe_name": "string", 
         "brand": "string",
+        "rating": "integer"
     }
-
+]
 
 ```
 
