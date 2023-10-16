@@ -189,7 +189,7 @@ Adds requested shoe to your profile shoe catalog
 
 ## 8.1. Get Account - `/users/{user_id}` (GET)
 
-Returns shoe catalog of the user profile you're viewing
+Returns information of the user profile you're viewing
 
 **Returns**:
 ```json
