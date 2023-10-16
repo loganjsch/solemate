@@ -60,7 +60,7 @@ Creates a new rating for a specific shoe.
 
 ### 3.1 Delete UserRating - '/{shoe_id}/ratings/{rating_id}' (DELETE)
 
-Deletes the review of an user of the shoe.
+Deletes the review of a user of the shoe.
 
 **Request**:
 
@@ -126,7 +126,7 @@ Returns shoes that match your search value
 ```json
 [
     {
-        "shoe_id": integer
+        "shoe_id": "integer"
         "shoe_name": "string", 
         "brand": "string",
     }
@@ -149,7 +149,7 @@ Returns users based on your search
 ```json
 [
     {
-        "username": integer
+        "username": "string"
     }
 
 ]
@@ -213,7 +213,7 @@ Returns shoe catalog of the website's shoe library.
 ```json
 [
     {
-        "shoe_id": integer
+        "shoe_id": "integer"
         "shoe_name": "string", 
         "brand": "string",
     }
@@ -223,15 +223,20 @@ Returns shoe catalog of the website's shoe library.
 
 # 10. Shoe Comparison
 
-## 10.1 Post Shoe Comparison - `/shoes/compare` (POST)
+## 10.1 Post Shoe Comparison - `/shoes/{shoe_id}/compare/{shoe_id_2}` (GET)
 
-Initiates a comparison between two shoes.
+Initiates a comparison between two shoes
 
 **Returns**:
 ```json
 [
     {
-        "shoe_ids": ["integer", "integer"]
+        "shoe_ids": ["integer", "integer"],
+        "shoe_names": ["string","string"],
+        "brands": ["string","string"],
+        "fits": ["string","string"],
+        "retail_prices": ["integer","integer"],
+        "ratings": ["integer","integer"],
     }
 ]
 ```
