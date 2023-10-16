@@ -219,5 +219,19 @@ Returns shoe catalog of the website's shoe library.
     }
 
 ]
-   
+
+# 10. Shoe Comparison
+
+## 10.1 Post Shoe Comparison - `/shoes/compare` (POST)
+
+Initiates a comparison between two or more shoes.
+
+**Returns**:
+```json
+[
+    {
+        "shoe_ids": ["integer", "integer"]
+    }
+]
+```
 
