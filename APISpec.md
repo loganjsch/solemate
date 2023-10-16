@@ -219,6 +219,7 @@ Returns shoe catalog of the website's shoe library.
     }
 
 ]
+```
 
 # 10. Shoe Comparison
 
