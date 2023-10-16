@@ -73,7 +73,7 @@ Returns all reviews and their contents for a certain shoe
 
 # 5. Search
 
-## 5.1 Search Shoe - `/search/shoes/{search_value}` (GET)
+## 5.1 Search Shoe - `/search/shoes/` (GET)
 Returns shoes that match your search value
 
 **Request**:
@@ -91,12 +91,13 @@ Returns shoes that match your search value
         "shoe_id": "integer"
         "shoe_name": "string", 
         "brand": "string",
+         "rating": integer
     }
 
 ]
 ```
 
-## 5.2 Search Users - `/search/users/{search_value}` (GET)
+## 5.2 Search Users - `/search/users/` (GET)
 Returns users based on your search
 
 **Request**:
@@ -149,7 +150,7 @@ Adds requested shoe to your profile shoe catalog
 
 # 8. Get Account Info:
 
-## 8.1. Get Account - `/users/{user_id}` (GET)
+## 8.1. Get Account Catalog - `/users/{user_id}` (GET)
 
 Returns information of the user profile you're viewing
 
@@ -157,9 +158,10 @@ Returns information of the user profile you're viewing
 ```json
 [
     {
-        "username": "string"
-        "email": "string", 
-        "ratings": "string",
+        "shoe_id": "integer"
+        "shoe_name": "string", 
+        "brand": "string",
+        "rating": integer
     }
 
 ]
@@ -173,14 +175,14 @@ Returns shoe catalog of the website's shoe library.
 
 **Returns**:
 ```json
-[
+
     {
         "shoe_id": "integer"
         "shoe_name": "string", 
         "brand": "string",
     }
 
-]
+
 ```
 
 # 10. Shoe Comparison
