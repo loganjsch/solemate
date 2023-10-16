@@ -195,9 +195,9 @@ Returns information of the user profile you're viewing
 ```json
 [
     {
-        "shoe_id": integer
-        "shoe_name": "string", 
-        "brand": "string",
+        "username": "string"
+        "email": "string", 
+        "ratings": "string",
     }
 
 ]
