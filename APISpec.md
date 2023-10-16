@@ -157,7 +157,7 @@ Returns users based on your search
 
 # 6. Post Shoe
 
-## 6.1 Post Shoe - '/post/' (POST)
+## 6.1 Post Shoe - '/shoes/{shoe_id}' (POST)
 
 Adds new shoe to website
 
@@ -202,5 +202,22 @@ Returns shoe catalog of the user profile you're viewing
 
 ]
 ```
+
+# 9. Get Shoe Catalog:
+
+## 9.1. Get Shoe Catalog - `/shoes` (GET)
+
+Returns shoe catalog of the website's shoe library.
+
+**Returns**:
+```json
+[
+    {
+        "shoe_id": integer
+        "shoe_name": "string", 
+        "brand": "string",
+    }
+
+]
    
 
