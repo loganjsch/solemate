@@ -19,7 +19,7 @@ Returns the name, fit, and brand of the shoe.
   
 }
 ```
-### 1.2 New Rating - '/ratings/'
+### 1.2 New Rating - '/ratings/{rating_id}' (POST)
 
 Creates a new rating for a specific shoe.
 
@@ -34,11 +34,39 @@ Creates a new rating for a specific shoe.
 }
 ```
 
+## 3. Customer Deletes a Review
 
-## 2. Customer Browses an Influencer's Reviews
+4. 'Get UserRatings'
 
-The API calls are made in this sequence when a customer wants to look through another's reviews:
+### 3.1 Get User - '/{shoe_id}/ratings/{rating_id}' (DELETE)
 
-3. `Get User`
+Deletes the review of an user of the shoe.
+
+**Request**:
+
+```json
+{
+    "confirmation": "string",
+}
+```
+
+## 3. Customer Browses Another User's Reviews
+
+4. 'Get UserRatings'
+
+### 3.1 Get User - '/users/{user_id}/ratings' (GET)
+
+Browse a specific user's ratings.
+
+**Request**:
+
+```json
+{
+    "shoe_id": "string",
+    "rating": "integer",
+    "comments": "string",
+    "username": "string"
+}
+```
 
    
