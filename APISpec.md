@@ -54,44 +54,6 @@ Creates a new rating for a specific shoe.
 }
 ```
 
-## 3. Customer Deletes a Review
-
-4. 'Delete UserRating'
-
-### 3.1 Delete UserRating - '/{shoe_id}/ratings/{rating_id}' (DELETE)
-
-Deletes the review of a user of the shoe.
-
-**Request**:
-
-```json
-{
-    "confirmation": "string",
-}
-```
-
-## 4. Customer Browses Another User's Reviews
-
-5. 'Get UserRatings'
-
-### 4.1 Get UserRatings - '/users/{user_id}/ratings' (GET)
-
-Browse a specific user's ratings.
-
-**Request**:
-
-```json
-{
-    "shoe_id": "string",
-    "rating": "integer",
-    "comments": "string",
-    "username": "string"
-}
-```
-
-## 5. Company posts shoe to website
-
-
 # 4. View Ratings
 
 ## 4.1 Get Reviews  - `/shoes/{shoe_id}/reviews` (GET)
@@ -157,7 +119,7 @@ Returns users based on your search
 
 # 6. Post Shoe
 
-## 6.1 Post Shoe - '/shoes/{shoe_id}' (POST)
+## 6.1 Post Shoe - `/shoes/{shoe_id}` (POST)
 
 Adds new shoe to website
 
@@ -205,7 +167,7 @@ Returns information of the user profile you're viewing
 
 # 9. Get Shoe Catalog:
 
-## 9.1. Get Shoe Catalog - `/shoes` (GET)
+## 9.1. Get Shoe Catalog - `/shoes/catalog` (GET)
 
 Returns shoe catalog of the website's shoe library.
 
@@ -223,12 +185,19 @@ Returns shoe catalog of the website's shoe library.
 
 # 10. Shoe Comparison
 
-## 10.1 Post Shoe Comparison - `/shoes/{shoe_id}/compare/{shoe_id_2}` (GET)
+## 10.1 Post Shoe Comparison - `/shoes/compare` (GET)
 
 Initiates a comparison between two shoes
+**Requests**
+```json
+{
+    "shoe_id_1": "integer",
+    "shoe_id_2": "integer",
+}
+```
 
 **Returns**:
-```json
+``` json
 [
     {
         "shoe_ids": ["integer", "integer"],
