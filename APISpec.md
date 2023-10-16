@@ -1,8 +1,10 @@
 # API Specification
 
+
 # 1. Account Creation
 
 ## 1.1 Create Account - `/account/` (POST)
+
 
 **Request**:
 
@@ -11,13 +13,17 @@
     "username": "string",
     "email": "string",
     "password": "string",
+
 }
 ```
 # 2. Get Shoe Info
 
+
 ## 2.1. Get Shoe - `/shoe/{shoe_id}` (GET)
 
 Returns shoe info for the shoe you are looking at
+
+**Request**:
 
 ```json
 {
@@ -35,6 +41,7 @@ Returns shoe info for the shoe you are looking at
 
 ## 3.1 Leave Rating - `/shoe/{shoe_id}/rate` (POST)
 
+
 Creates a new rating for a specific shoe.
 
 **Request**:
@@ -46,6 +53,43 @@ Creates a new rating for a specific shoe.
     "username": "string"
 }
 ```
+
+## 3. Customer Deletes a Review
+
+4. 'Delete UserRating'
+
+### 3.1 Delete UserRating - '/{shoe_id}/ratings/{rating_id}' (DELETE)
+
+Deletes the review of an user of the shoe.
+
+**Request**:
+
+```json
+{
+    "confirmation": "string",
+}
+```
+
+## 4. Customer Browses Another User's Reviews
+
+5. 'Get UserRatings'
+
+### 4.1 Get UserRatings - '/users/{user_id}/ratings' (GET)
+
+Browse a specific user's ratings.
+
+**Request**:
+
+```json
+{
+    "shoe_id": "string",
+    "rating": "integer",
+    "comments": "string",
+    "username": "string"
+}
+```
+
+## 5. Company posts shoe to website
 
 
 # 4. View Ratings
@@ -159,3 +203,4 @@ Returns shoe catalog of the user profile you're viewing
 ]
 ```
    
+
