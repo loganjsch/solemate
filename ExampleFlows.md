@@ -14,4 +14,9 @@ While scrolling through them, he notices a pair of shoes he likes that are rated
 so he decided to click on them, which calls GET /shoes/{shoe_id}.
 Finally, he decided that these are the shoes for him and saves them to his profile by calling POST /shoes/add
 
-## Shoe company wants to be able to post the shoes they are selling to the webstie.
+## User wants to compare two shoes
+
+Daniel, an avid runner, is in a dilemma. He's been eyeing the Adidas Ultraboost and the Nike Free Run for his upcoming marathon but can't decide which one to buy. Eager to make an informed decision, he turns to Solemate's comparison feature. Logging in, he quickly searches and selects both shoes, then hits the "Compare" button, triggering a request to the /shoes/compare endpoint. Moments later, a side-by-side comparison of the two loads up, fetched from the /shoes/compare/results endpoint. As he scans the detailed specifications, ratings, and top reviews presented in a neat tabular format, Daniel notices the Adidas Ultraboost's superior cushioning and slightly higher average rating. The comparison makes his choice clear: the Adidas Ultraboost is the one for him. 
+
+## Shoe company wants to be able to post the shoes they are selling to the website.
+
