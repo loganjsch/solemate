@@ -5,8 +5,8 @@ import sqlalchemy
 from src import database as db
 
 router = APIRouter(
-    prefix="/barrels",
-    tags=["barrels"],
+    prefix="/shoes",
+    tags=["shoes"],
     dependencies=[Depends(auth.get_api_key)],
 )
 
@@ -32,15 +32,33 @@ class Rating(BaseModel):
     rating: int
     comment: str
 
-@router.post("/shoes/:shoe_id/ratings/:rating_id")
+@router.get("")
+def get_shoe_catalog():
+    """ """
+    with db.engine.begin() as connection:
+        catalog = connection.execute(sqlalchemy.text("SELECT * FROM shoes"))
+    ret = []
+    for shoe in catalog:
+        ret.append(
+            {
+                "shoe_id": shoe.shoe_id,
+                "name": shoe.name,
+                "brand": shoe.brand,
+                "price": shoe.price,
+                "colors": shoe.colors,
+                "material": shoe.material,
+                "tags": shoe.tags,
+            }
+        )
+    return ret
+
+@router.post("/{shoe_id}/ratings/{rating_id}")
 def post_shoe_rating(Rating):
     """ """
     with db.engine.begin() as connection:
         connection.execute(sqlalchemy.text("""
                                            INSERT INTO ratings (shoe_id, user_id, rating, comment) 
                                            VALUES (:shoe_id, :user_id, :rating, :comment)
-                                           JOIN shoes AS shoes_ratings ON ratings.shoe_id = shoes.shoe_id
-                                           WHERE shoe_id = :shoe_id
                                            """),
                                         [{"shoe_id": Rating.shoe_id, "rating": Rating.rating, "rating": Rating.rating, "comment": Rating.comment}])
     return "OK"
