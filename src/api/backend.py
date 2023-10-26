@@ -26,41 +26,44 @@ class Shoe(BaseModel):
     material: str
     tags: list[str]
 
-class Rating(BaseModel):
+class Review(BaseModel):
     shoe_id: int
     user_id: int
     rating: int
     comment: str
 
-@router.get("")
-def get_shoe_catalog():
+class Rating(BaseModel):
+    rating: int
+    comment: str
+
+@router.get("/{shoe_id}")
+def get_shoe(shoe_id: int):
     """ """
     with db.engine.begin() as connection:
-        catalog = connection.execute(sqlalchemy.text("SELECT * FROM shoes"))
-    ret = []
-    for shoe in catalog:
-        ret.append(
-            {
-                "shoe_id": shoe.shoe_id,
-                "name": shoe.name,
-                "brand": shoe.brand,
-                "price": shoe.price,
-                "colors": shoe.colors,
-                "material": shoe.material,
-                "tags": shoe.tags,
-            }
-        )
-    return ret
+        shoe = connection.execute(sqlalchemy.text("""
+                                                  SELECT * FROM shoes
+                                                  WHERE shoe_id = :shoe_id
+                                                  """), 
+                                                  [{"shoe_id": shoe_id}]).scalar_one()
+    return {
+        "shoe_id": shoe.shoe_id,
+        "name": shoe.name,
+        "brand": shoe.brand,
+        "price": shoe.price,
+        "colors": shoe.colors,
+        "material": shoe.material,
+        "tags": shoe.tags,
+        }
 
-@router.post("/{shoe_id}/ratings/{rating_id}")
-def post_shoe_rating(Rating):
+@router.post("/{shoe_id}/ratings/{user_id}")
+def post_shoe_rating(shoe_id: str, user_id: str, new_rating: Rating):
     """ """
     with db.engine.begin() as connection:
         connection.execute(sqlalchemy.text("""
                                            INSERT INTO ratings (shoe_id, user_id, rating, comment) 
                                            VALUES (:shoe_id, :user_id, :rating, :comment)
                                            """),
-                                        [{"shoe_id": Rating.shoe_id, "rating": Rating.rating, "rating": Rating.rating, "comment": Rating.comment}])
+                                        [{"shoe_id": shoe_id, "user_id": user_id, "rating": Rating.rating, "comment": Rating.comment}])
     return "OK"
 
 # Gets called once a day

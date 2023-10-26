@@ -5,6 +5,26 @@ from src import database as db
 router = APIRouter()
 
 
+@router.get("")
+def get_shoe_catalog():
+    """ """
+    with db.engine.begin() as connection:
+        catalog = connection.execute(sqlalchemy.text("SELECT * FROM shoes"))
+    ret = []
+    for shoe in catalog:
+        ret.append(
+            {
+                "shoe_id": shoe.shoe_id,
+                "name": shoe.name,
+                "brand": shoe.brand,
+                "price": shoe.price,
+                "colors": shoe.colors,
+                "material": shoe.material,
+                "tags": shoe.tags,
+            }
+        )
+    return ret
+
 @router.get("/catalog/", tags=["catalog"])
 def get_catalog():
     """
