@@ -55,6 +55,20 @@ def get_shoe(shoe_id: int):
         "tags": shoe.tags,
         }
 
+@router.get("/{shoe_id}/ratings")
+def get_shoe(shoe_id: int):
+    """ """
+    with db.engine.begin() as connection:
+        ave_rating = connection.execute(sqlalchemy.text(
+                                                """
+                                                SELECT SUM(rating) 
+                                                FROM ratings
+                                                WHERE shoe_id = :shoe_id
+                                                """), 
+                                                [{"shoe_id": shoe_id}])
+
+    return ave_rating
+
 @router.post("/{shoe_id}/ratings/{user_id}")
 def post_shoe_rating(shoe_id: str, user_id: str, new_rating: Rating):
     """ """
@@ -63,7 +77,7 @@ def post_shoe_rating(shoe_id: str, user_id: str, new_rating: Rating):
                                            INSERT INTO ratings (shoe_id, user_id, rating, comment) 
                                            VALUES (:shoe_id, :user_id, :rating, :comment)
                                            """),
-                                        [{"shoe_id": shoe_id, "user_id": user_id, "rating": Rating.rating, "comment": Rating.comment}])
+                                        [{"shoe_id": shoe_id, "user_id": user_id, "rating": new_rating.rating, "comment": new_rating.comment}])
     return "OK"
 
 # Gets called once a day
