@@ -36,11 +36,19 @@ class Rating(BaseModel):
 def get_shoe(shoe_id: int):
     """ """
     with db.engine.begin() as connection:
-        shoe = connection.execute(sqlalchemy.text("""
-                                                  SELECT * FROM shoes
-                                                  WHERE shoe_id = :shoe_id
-                                                  """), 
-                                                  [{"shoe_id": shoe_id}]).scalar_one()
+        shoe = connection.execute(sqlalchemy.text(
+                                                """
+                                                SELECT * FROM shoes
+                                                WHERE shoe_id = :shoe_id
+                                                """), 
+                                                [{"shoe_id": shoe_id}]).scalar_one()
+        ave_rating = connection.execute(sqlalchemy.text(
+                                                """
+                                                SELECT SUM(rating)
+                                                FROM ratings
+                                                WHERE shoe_id = :shoe_id
+                                                """), 
+                                                [{"shoe_id": shoe_id}]).scalar_one()
     return {
         "shoe_id": shoe.shoe_id,
         "name": shoe.name,
@@ -49,6 +57,8 @@ def get_shoe(shoe_id: int):
         "colors": shoe.colors,
         "material": shoe.material,
         "tags": shoe.tags,
+        "type": shoe.type,
+        "rating": ave_rating
         }
 
 @router.get("/{shoe_id}/ratings")
