@@ -26,13 +26,9 @@ class Shoe(BaseModel):
     material: str
     tags: list[str]
 
-class Review(BaseModel):
+class Rating(BaseModel):
     shoe_id: int
     user_id: int
-    rating: int
-    comment: str
-
-class Rating(BaseModel):
     rating: int
     comment: str
 
@@ -56,14 +52,14 @@ def get_shoe(shoe_id: int):
         }
 
 @router.post("/{shoe_id}/ratings/{user_id}")
-def post_shoe_rating(shoe_id: str, user_id: str, new_rating: Rating):
+def post_shoe_rating(shoe_id: str, user_id: str, rating: int, comment: str):
     """ """
     with db.engine.begin() as connection:
         connection.execute(sqlalchemy.text("""
                                            INSERT INTO ratings (shoe_id, user_id, rating, comment) 
                                            VALUES (:shoe_id, :user_id, :rating, :comment)
                                            """),
-                                        [{"shoe_id": shoe_id, "user_id": user_id, "rating": Rating.rating, "comment": Rating.comment}])
+                                        [{"shoe_id": shoe_id, "user_id": user_id, "rating": rating, "comment": comment}])
     return "OK"
 
 # Gets called once a day
