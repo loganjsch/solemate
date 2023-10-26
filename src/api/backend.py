@@ -54,16 +54,24 @@ def get_shoe(shoe_id: int):
 @router.get("/{shoe_id}/ratings")
 def get_shoe(shoe_id: int):
     """ """
+    ratings = []
     with db.engine.begin() as connection:
-        ave_rating = connection.execute(sqlalchemy.text(
+        rating_list = connection.execute(sqlalchemy.text(
                                                 """
-                                                SELECT SUM(rating) 
+                                                SELECT * 
                                                 FROM ratings
                                                 WHERE shoe_id = :shoe_id
                                                 """), 
                                                 [{"shoe_id": shoe_id}])
-
-    return ave_rating
+    for rating in rating_list:
+        ratings.append(
+                    {
+                    "user_id": rating.user_id,
+                    "rating": rating.rating,
+                    "comment": rating.comment
+                    }
+                    )
+    return ratings
 
 @router.post("/{shoe_id}/ratings/{user_id}")
 def post_shoe_rating(shoe_id: str, user_id: str, rating: int, comment: str):
@@ -83,4 +91,4 @@ def get_wholesale_purchase_plan(wholesale_catalog: list[User]):
     print(wholesale_catalog)
   
     
-    return plan
+    return 0
