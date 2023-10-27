@@ -18,7 +18,7 @@ def get_shoe_catalog():
                 "name": shoe.name,
                 "brand": shoe.brand,
                 "price": shoe.price,
-                "colors": shoe.colors,
+                "color": shoe.color,
                 "material": shoe.material,
                 "tags": shoe.tags,
             }
