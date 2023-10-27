@@ -12,6 +12,8 @@ lschwa06@calpoly.edu
 Rohit Bathula
 rbathula@calpoly.edu
 
+Ian McCurry
+imccurry@calpoly.edu
 
 We are developing the backend API of a revolutionary new service to ensure that you are wearing the perfect shoes for your feet.
 
