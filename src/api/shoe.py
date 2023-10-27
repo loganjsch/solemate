@@ -93,12 +93,3 @@ def post_shoe_rating(shoe_id: str, user_id: str, rating: int, comment: str):
                                            """),
                                         [{"shoe_id": shoe_id, "user_id": user_id, "rating": rating, "comment": comment}])
     return "OK"
-
-# Gets called once a day
-@router.post("/plan")
-def get_wholesale_purchase_plan(wholesale_catalog: list[User]):
-    """ """
-    print(wholesale_catalog)
-  
-    
-    return 0
