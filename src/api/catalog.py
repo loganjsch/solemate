@@ -5,7 +5,7 @@ from src import database as db
 router = APIRouter()
 
 
-@router.get("/shoes")
+@router.get("/shoes", tags=["shoes"])
 def get_shoe_catalog():
     """ """
     with db.engine.begin() as connection:
