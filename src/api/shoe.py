@@ -18,11 +18,11 @@ class User(BaseModel):
     password: str
 
 class Shoe(BaseModel):
-    shoe_id: int
+    id: int
     name: str
     brand: str
     price: int
-    colors: str
+    color: str
     material: str
     tags: list[str]
 
@@ -50,11 +50,11 @@ def get_shoe(shoe_id: int):
                                                 """), 
                                                 [{"shoe_id": shoe_id}]).scalar_one()
     return {
-        "shoe_id": shoe.shoe_id,
+        "id": shoe.id,
         "name": shoe.name,
         "brand": shoe.brand,
         "price": shoe.price,
-        "colors": shoe.colors,
+        "color": shoe.color,
         "material": shoe.material,
         "tags": shoe.tags,
         "type": shoe.type,
