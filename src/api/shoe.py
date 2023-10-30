@@ -44,7 +44,7 @@ def get_shoe(shoe_id: int):
                                                 [{"shoe_id": shoe_id}]).first()
         ave_rating = connection.execute(sqlalchemy.text(
                                                 """
-                                                SELECT SUM(rating)
+                                                SELECT AVG(rating)
                                                 FROM ratings
                                                 WHERE shoe_id = :shoe_id
                                                 """), 
