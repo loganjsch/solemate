@@ -13,7 +13,6 @@ curl -X 'GET' \
 2. The response you received in executing the curl statement.
 
 
-**Schema.sql:**
+# Schema.SQL
 
-**Any inserts for pre-populated data that your example flow depends upon:
-**
+# Any Inserts for Prepopulated Data
