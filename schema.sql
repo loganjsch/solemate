@@ -70,8 +70,8 @@ create table
   ) tablespace pg_default;
 
 INSERT INTO users (name, username)
-VALUES (Bobby Brewster, BobsBrews);
+VALUES ("Bobby Brewster", "BobsBrews");
 INSERT INTO users (name, username)
-VALUES (Bobby Daniel, dantheman);
+VALUES ("Bobby Daniel", "dantheman");
 INSERT INTO ratings (rating, comment)
 VALUES (5, "Best Shoes I've Ever Owned");
