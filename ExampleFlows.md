@@ -1,5 +1,5 @@
 ## User wants to leave a review for a pair of shoes that they own.
-Daniel, a hypebeast, hates his new pair of Nike Airforce 1's. First, he calls GET /search/shoes/ to search up the model of the shoes that he wants to rate. On the shoe page at he calls /shoes/{shoe_id} (GET) endpoint to get the Nike Airforce 1's. From there he calls /shoes/{shoe_id}/reviews (GET) to see all the reviews on the shoe. He called the /shoe/{shoe_id}/rate endpoint when he clicked the rate button, which shows the review menu then he clicks 1 star out of 5, and writes his review. Then he clicks submit which is - /shoe/{shoe_id}/rate (POST), and his review now shows up on the shoe page when /shoes/{shoe_id}/reviews (GET) is called.
+Daniel, a hypebeast, hates his new pair of Nike Airforce 1's. First, he calls GET /shoes to get a catalog of all the shoes on the website. On the shoes page, he clicks the pair of shoes he wants to rate which calls the /shoes/{shoe_id} (GET) endpoint to get the Nike Airforce 1's. From there he calls /shoes/{shoe_id}/ratings (GET) to see all the reviews on the shoe. He then writes a review, gives a 1 out of 5 start rating and clicks the submit button which calls the /shoe/{shoe_id}/ratings/{user_id} (POST) endpoint. His review now shows up on the shoe page when /shoes/{shoe_id}/reviews (GET) is called.
 
 ## User wants to search for a shoe to buy.
 
