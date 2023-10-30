@@ -69,9 +69,13 @@ create table
     constraint Users_pkey primary key (user_id)
   ) tablespace pg_default;
 
-INSERT INTO users (name, username)
-VALUES ("Bobby Brewster", "BobsBrews");
-INSERT INTO users (name, username)
-VALUES ("Bobby Daniel", "dantheman");
+INSERT INTO users (name, username, email, password)
+VALUES ("Bobby Brewster", "BobsBrews", "bobby@gmail.com", "bobbybob");
+INSERT INTO users (name, username, email, password)
+VALUES ("Bobby Daniel", "dantheman", "danny@gmail.com", "iluvshoez");
 INSERT INTO ratings (rating, comment)
 VALUES (5, "Best Shoes I've Ever Owned");
+/*
+Initially populated the shoes table with a .csv file.
+This file is in the starter_files folder: shoes.csv
+*/
