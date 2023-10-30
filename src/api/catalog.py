@@ -9,7 +9,10 @@ router = APIRouter()
 def get_shoe_catalog():
     """ """
     with db.engine.begin() as connection:
-        catalog = connection.execute(sqlalchemy.text("SELECT * FROM shoes"))
+        catalog = connection.execute(sqlalchemy.text("""SELECT * 
+                                                     FROM shoes 
+                                                     ORDER BY RANDOM() 
+                                                     LIMIT 10"""))
     ret = []
     for shoe in catalog:
         ret.append(
