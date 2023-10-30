@@ -74,4 +74,4 @@ VALUES (Bobby Brewster, BobsBrews);
 INSERT INTO users (name, username)
 VALUES (Bobby Daniel, dantheman);
 INSERT INTO ratings (rating, comment)
-VALUES (5, Best Shoes I've Ever Owned);
+VALUES (5, "Best Shoes I've Ever Owned");
