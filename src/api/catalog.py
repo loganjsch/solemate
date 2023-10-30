@@ -15,15 +15,19 @@ def get_shoe_catalog():
                                                      LIMIT 10"""))
     ret = []
     for shoe in catalog:
+        with db.engine.begin() as connection:
+            ave_rating = connection.execute(sqlalchemy.text(
+                                                """
+                                                SELECT SUM(rating)
+                                                FROM ratings
+                                                WHERE shoe_id = :shoe_id
+                                                """), 
+                                                [{"shoe_id": shoe.shoe_id}]).scalar_one()
         ret.append(
             {
-                "shoe_id": shoe.shoe_id,
                 "name": shoe.name,
                 "brand": shoe.brand,
-                "price": shoe.price,
-                "color": shoe.color,
-                "material": shoe.material,
-                "tags": shoe.tags,
+                "rating": ave_rating
             }
         )
     return ret
