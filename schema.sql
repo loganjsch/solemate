@@ -69,3 +69,9 @@ create table
     constraint Users_pkey primary key (user_id)
   ) tablespace pg_default;
 
+INSERT INTO users (name, username)
+VALUES (Bobby Brewster, BobsBrews);
+INSERT INTO users (name, username)
+VALUES (Bobby Daniel, dantheman);
+INSERT INTO ratings (rating, comment)
+VALUES (5, Best Shoes I've Ever Owned);
