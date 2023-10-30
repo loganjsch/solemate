@@ -76,6 +76,6 @@ VALUES ("Bobby Daniel", "dantheman", "danny@gmail.com", "iluvshoez");
 INSERT INTO ratings (rating, comment)
 VALUES (5, "Best Shoes I've Ever Owned");
 /*
-Initially populated the table with a .csv file.
+Initially populated the shoes table with a .csv file.
 This file is in the starter_files folder: shoes.csv
 */
