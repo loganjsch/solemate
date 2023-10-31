@@ -18,33 +18,9 @@ def reset():
     """
     with db.engine.begin() as connection:
         connection.execute(sqlalchemy.text("""
-                                           TRUNCATE cart_items, carts, gold_ledger, ml_ledger, potion_ledger
+                                           TRUNCATE users, ratings, brands, shoes_to_users,
                                            """))
-        connection.execute(sqlalchemy.text("""
-                                           INSERT INTO gold_ledger (gold_change)
-                                           VALUES (100)
-                                           """))
-        connection.execute(sqlalchemy.text("""
-                                           INSERT INTO ml_ledger (red_ml_change, green_ml_change, blue_ml_change, dark_ml_change)
-                                           VALUES (0, 0, 0, 0)
-                                           """))
-        connection.execute(sqlalchemy.text("""
-                                           INSERT INTO potions_ledger (potion_change, potion_id)
-                                           SELECT 0, potions.id
-                                           FROM potions
-                                           GROUP BY potion_id
-                                           """))
+
     
     return "OK"
-
-
-@router.get("/shop_info/")
-def get_shop_info():
-    """ """
-
-    # TODO: Change me!
-    return {
-        "shop_name": "Jitter Juice",
-        "shop_owner": "Charles Moreno",
-    }
 
