@@ -8,11 +8,11 @@ import sys
 from starlette.middleware.cors import CORSMiddleware
 
 description = """
-Central Coast Cauldrons is the premier ecommerce site for all your alchemical desires.
+Solemate is a revolutionary service designed to make sure you're wearing the right shoe.
 """
 
 app = FastAPI(
-    title="Central Coast Cauldrons",
+    title="Solemate",
     description=description,
     version="0.0.1",
     terms_of_service="http://example.com/terms/",
@@ -32,10 +32,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-app.include_router(audit.router)
-app.include_router(carts.router)
 app.include_router(catalog.router)
-app.include_router(bottler.router)
 app.include_router(shoe.router)
 app.include_router(admin.router)
 
@@ -52,4 +49,4 @@ async def validation_exception_handler(request, exc):
 
 @app.get("/")
 async def root():
-    return {"message": "Welcome to the Central Coast Cauldrons."}
+    return {"message": "Welcome to Solemate."}
