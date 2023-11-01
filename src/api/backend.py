@@ -25,6 +25,7 @@ class Shoe(BaseModel):
     colors: str
     material: str
     tags: list[str]
+    type: str
 
 class Rating(BaseModel):
     shoe_id: int

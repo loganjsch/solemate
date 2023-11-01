@@ -18,12 +18,14 @@ class ShoeCompany(BaseModel):
 
 @router.post("/deliver")
 def post_shoe(new_shoe: Shoe):
-    """ """
+    """Add new shoe to the app"""
     print(new_shoe)
     with db.engine.begin() as connection:
         connection.execute(sqlalchemy.text("""
-            INSERT INTO 
-        """))
+            INSERT INTO shoes (name, brand, price, color, material, tags, type)
+            VALUES (:name, :brand, :price, :color, :material, :tags, :type)
+        """), {"name": new_shoe.name, "brand": new_shoe.brand, "price": new_shoe.price, "color": new_shoe.color, "material": new_shoe.material, "tags": new_shoe.tags, "type": new_shoe.type})
+
         return "OK"
 
 # Gets called 4 times a day
