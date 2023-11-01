@@ -32,7 +32,7 @@ def post_shoe(new_shoe: Shoe):
 @router.post("/plan")
 def get_plan():
     """
-    Go from barrel to bottle.
+
     """
 
     with db.engine.begin() as connection:
