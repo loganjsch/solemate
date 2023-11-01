@@ -54,44 +54,6 @@ Creates a new rating for a specific shoe.
 }
 ```
 
-## 3. Customer Deletes a Review
-
-4. 'Delete UserRating'
-
-### 3.1 Delete UserRating - '/{shoe_id}/ratings/{rating_id}' (DELETE)
-
-Deletes the review of an user of the shoe.
-
-**Request**:
-
-```json
-{
-    "confirmation": "string",
-}
-```
-
-## 4. Customer Browses Another User's Reviews
-
-5. 'Get UserRatings'
-
-### 4.1 Get UserRatings - '/users/{user_id}/ratings' (GET)
-
-Browse a specific user's ratings.
-
-**Request**:
-
-```json
-{
-    "shoe_id": "string",
-    "rating": "integer",
-    "comments": "string",
-    "username": "string"
-}
-```
-
-## 5. Company posts shoe to website
-
-
 # 4. View Ratings
 
 ## 4.1 Get Reviews  - `/shoes/{shoe_id}/reviews` (GET)
@@ -111,7 +73,7 @@ Returns all reviews and their contents for a certain shoe
 
 # 5. Search
 
-## 5.1 Search Shoe - `/search/shoes/{search_value}` (GET)
+## 5.1 Search Shoe - `/search/shoes/` (GET)
 Returns shoes that match your search value
 
 **Request**:
@@ -126,15 +88,16 @@ Returns shoes that match your search value
 ```json
 [
     {
-        "shoe_id": integer
+        "shoe_id": "integer"
         "shoe_name": "string", 
         "brand": "string",
+         "rating": integer
     }
 
 ]
 ```
 
-## 5.2 Search Users - `/search/users/{search_value}` (GET)
+## 5.2 Search Users - `/search/users/` (GET)
 Returns users based on your search
 
 **Request**:
@@ -149,7 +112,7 @@ Returns users based on your search
 ```json
 [
     {
-        "username": integer
+        "username": "string"
     }
 
 ]
@@ -157,7 +120,7 @@ Returns users based on your search
 
 # 6. Post Shoe
 
-## 6.1 Post Shoe - '/post/' (POST)
+## 6.1 Post Shoe - `/shoes/{shoe_id}` (POST)
 
 Adds new shoe to website
 
@@ -187,20 +150,66 @@ Adds requested shoe to your profile shoe catalog
 
 # 8. Get Account Info:
 
-## 8.1. Get Account - `/users/{user_id}` (GET)
+## 8.1. Get Account Catalog - `/users/{user_id}/catalog` (GET)
 
-Returns shoe catalog of the user profile you're viewing
+Returns information of the user profile you're viewing
 
 **Returns**:
 ```json
 [
     {
-        "shoe_id": integer
+        "shoe_id": "integer"
         "shoe_name": "string", 
         "brand": "string",
+        "rating": integer
     }
 
 ]
 ```
-   
+
+# 9. Get Entire Shoe Catalog:
+
+## 9.1. Get Shoe Catalog - `/shoes/catalog` (GET)
+
+Returns shoe catalog of the entire website's shoe library.
+
+**Returns**:
+```json
+[
+    {
+        "shoe_id": "integer"
+        "shoe_name": "string", 
+        "brand": "string",
+        "rating": "integer"
+    }
+]
+
+```
+
+# 10. Shoe Comparison
+
+## 10.1 Post Shoe Comparison - `/shoes/compare` (GET)
+
+Initiates a comparison between two shoes
+**Requests**
+```json
+{
+    "shoe_id_1": "integer",
+    "shoe_id_2": "integer",
+}
+```
+
+**Returns**:
+``` json
+
+{
+    "shoe_ids": ["integer", "integer"],
+    "shoe_names": ["string","string"],
+    "brands": ["string","string"],
+    "fits": ["string","string"],
+    "retail_prices": ["integer","integer"],
+    "ratings": ["integer","integer"],
+}
+
+```
 
