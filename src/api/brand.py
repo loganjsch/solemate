@@ -7,8 +7,8 @@ import sqlalchemy
 from src import database as db
 
 router = APIRouter(
-    prefix="/bottler",
-    tags=["bottler"],
+    prefix="/brands",
+    tags=["brands"],
     dependencies=[Depends(auth.get_api_key)],
 )
 
@@ -27,6 +27,18 @@ def post_shoe(new_shoe: Shoe):
         """), {"name": new_shoe.name, "brand": new_shoe.brand, "price": new_shoe.price, "color": new_shoe.color, "material": new_shoe.material, "tags": new_shoe.tags, "type": new_shoe.type})
 
         return "OK"
+
+@router.post("/{brand_name}")
+def create_brand(brand_name: str, email: str, password: int):
+    """ """
+    with db.engine.begin() as connection:
+        connection.execute(sqlalchemy.text("""
+                                           INSERT INTO brands (brand_name, email, password) 
+                                           VALUES (:brand_name, :email, :password)
+                                           """),
+                                        [{"brand_name": brand_name, "email": email, "password": password}])
+    return "OK"
+
 
 # Gets called 4 times a day
 @router.post("/plan")
