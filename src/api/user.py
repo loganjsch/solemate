@@ -17,7 +17,7 @@ class User(BaseModel):
     email: str
     password: str
 
-@router.post("/{name}")
+@router.post("/")
 def create_user(name: str, username: str, email: int, password: str):
     """ """
     with db.engine.begin() as connection:
@@ -40,7 +40,6 @@ def add_shoe_to_Collection(shoe_id: int, user_id: int):
 
 @router.get("/{user_id}/reviews")
 def get_user_reviews(user_id: int):
-    """ """
     with db.engine.begin() as connection:
         reviews = connection.execute(sqlalchemy.text("""
                                                     SELECT shoe.name, rating, comment FROM ratings AS rating
@@ -60,13 +59,13 @@ def get_user_reviews(user_id: int):
     
     return ratings
 
-@router.put("/{user_id}/shoes")
+@router.get("/{user_id}/shoes")
 def get_user_collection(user_id: int):
     """ """
     with db.engine.begin() as connection:
         collection = connection.execute(sqlalchemy.text(
                                                     """
-                                                    SELECT name, rating, comment FROM shoes
+                                                    SELECT shoes.shoe_id, name, brand, color, material, price FROM shoes
                                                     JOIN shoes_to_users AS join_table ON join_table.shoe_id = shoes.shoe_id
                                                     WHERE join_table.user_id = :user_id
                                                     """),
@@ -77,7 +76,12 @@ def get_user_collection(user_id: int):
     for shoe in collection:
         shoes.append(
                 {
-                "shoe_name": shoe.name
+                "shoe_id": shoe.shoe_id,
+                "shoe_name": shoe.name,
+                "brand": shoe.brand,
+                "color": shoe.color,
+                "material": shoe.material,
+                "price": shoe.price
                 }
         )
     return shoes

@@ -12,24 +12,36 @@ router = APIRouter(
     dependencies=[Depends(auth.get_api_key)],
 )
 
+class Shoe(BaseModel):
+    shoe_id: int
+    name: str
+    brand: str
+    price: int
+    color: str
+    material: str
+    tags: list[str]
+    type: str
+
 class ShoeCompany(BaseModel):
     brand_name: str
+    email: str
+    pasword: str
     shoes: list[Shoe]
 
-@router.post("/deliver")
-def post_shoe(new_shoe: Shoe):
+@router.post("/{brand_id}/shoes")
+def post_shoe(name: str, brand: str, price: int, color: str, material: str, tags: list[str], type: str):
     """Add new shoe to the app"""
-    print(new_shoe)
+    print(name, brand, price, color, material, tags, type)
     with db.engine.begin() as connection:
         connection.execute(sqlalchemy.text("""
             INSERT INTO shoes (name, brand, price, color, material, tags, type)
             VALUES (:name, :brand, :price, :color, :material, :tags, :type)
-        """), {"name": new_shoe.name, "brand": new_shoe.brand, "price": new_shoe.price, "color": new_shoe.color, "material": new_shoe.material, "tags": new_shoe.tags, "type": new_shoe.type})
+        """), {"name": name, "brand": brand, "price": price, "color": color, "material": material, "tags": tags, "type": type})
 
         return "OK"
 
-@router.post("/{brand_name}")
-def create_brand(brand_name: str, email: str, password: int):
+@router.post("/")
+def create_brand(brand_name: str, email: str, password: str):
     """ """
     with db.engine.begin() as connection:
         connection.execute(sqlalchemy.text("""
@@ -38,15 +50,3 @@ def create_brand(brand_name: str, email: str, password: int):
                                            """),
                                         [{"brand_name": brand_name, "email": email, "password": password}])
     return "OK"
-
-
-# Gets called 4 times a day
-@router.post("/plan")
-def get_plan():
-    """
-
-    """
-
-    with db.engine.begin() as connection:
-
-        return
