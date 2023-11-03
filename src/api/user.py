@@ -18,7 +18,7 @@ class User(BaseModel):
     password: str
 
 @router.post("/")
-def create_user(name: str, username: str, email: int, password: str):
+def create_user(name: str, username: str, email: str, password: str):
     """ """
     with db.engine.begin() as connection:
         connection.execute(sqlalchemy.text("""
@@ -42,7 +42,7 @@ def add_shoe_to_Collection(shoe_id: int, user_id: int):
 def get_user_reviews(user_id: int):
     with db.engine.begin() as connection:
         reviews = connection.execute(sqlalchemy.text("""
-                                                    SELECT shoe.name, rating, comment FROM ratings AS rating
+                                                    SELECT shoe.name, rating, comment FROM reviews AS rating
                                                     JOIN shoes AS shoe ON shoe.shoe_id = rating.shoe_id
                                                     WHERE rating.user_id = :user_id
                                                     """),

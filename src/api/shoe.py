@@ -87,6 +87,8 @@ def get_shoe_reviews(shoe_id: int):
 @router.post("/{shoe_id}/review")
 def post_shoe_review(shoe_id: str, user_id: str, rating: int, comment: str):
     """ """
+    if rating > 5 or rating < 1:
+        return "INVALID RATING (1-5 INCLUSIVE)"
     with db.engine.begin() as connection:
         connection.execute(sqlalchemy.text("""
                                            INSERT INTO reviews (shoe_id, user_id, rating, comment) 
