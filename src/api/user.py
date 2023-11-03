@@ -48,7 +48,7 @@ def get_users_reviews(user_id: int):
                                                     WHERE user_id = :user_id
                                                     """), 
                                                     [{"user_id": user_id}])
-    for review in rating_list:
+    for review in review_list:
         reviews.append(
                     {
                     "shoe_id": review.shoe_id,
