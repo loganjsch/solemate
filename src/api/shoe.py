@@ -62,34 +62,34 @@ def get_shoe(shoe_id: int):
         "rating": ave_rating
         }
 
-@router.get("/{shoe_id}/ratings")
-def get_shoe_ratings(shoe_id: int):
+@router.get("/{shoe_id}/reviews")
+def get_shoe_reviews(shoe_id: int):
     """ """
-    ratings = []
+    reviews = []
     with db.engine.begin() as connection:
-        rating_list = connection.execute(sqlalchemy.text(
+        review_list = connection.execute(sqlalchemy.text(
                                                 """
                                                 SELECT * 
-                                                FROM ratings
+                                                FROM reviews
                                                 WHERE shoe_id = :shoe_id
                                                 """), 
                                                 [{"shoe_id": shoe_id}])
-    for rating in rating_list:
-        ratings.append(
+    for review in review_list:
+        reviews.append(
                     {
-                    "user_id": rating.user_id,
-                    "rating": rating.rating,
-                    "comment": rating.comment
+                    "user_id": review.user_id,
+                    "rating": review.rating,
+                    "comment": review.comment
                     }
                     )
-    return ratings
+    return reviews
 
-@router.post("/{shoe_id}/ratings/{user_id}")
-def post_shoe_rating(shoe_id: str, user_id: str, rating: int, comment: str):
+@router.post("/{shoe_id}/reviews/{user_id}")
+def post_shoe_review(shoe_id: str, user_id: str, rating: int, comment: str):
     """ """
     with db.engine.begin() as connection:
         connection.execute(sqlalchemy.text("""
-                                           INSERT INTO ratings (shoe_id, user_id, rating, comment) 
+                                           INSERT INTO reviews (shoe_id, user_id, rating, comment) 
                                            VALUES (:shoe_id, :user_id, :rating, :comment)
                                            """),
                                         [{"shoe_id": shoe_id, "user_id": user_id, "rating": rating, "comment": comment}])
