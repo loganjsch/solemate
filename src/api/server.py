@@ -1,7 +1,7 @@
 from fastapi import FastAPI, exceptions
 from fastapi.responses import JSONResponse
 from pydantic import ValidationError
-from src.api import audit, carts, catalog, bottler, shoe, admin
+from src.api import audit, carts, catalog, user, shoe, admin
 import json
 import logging
 import sys

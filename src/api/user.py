@@ -28,8 +28,8 @@ def create_user(name: str, username: str, email: int, password: str):
                                         [{"name": name, "username": username, "email": email, "password": password}])
     return "OK"
 
-@router.post("/{user_id}/shoes/{shoe_id}")
-def addTo_user_Collection(shoe_id: int, user_id: int):
+@router.post("/{user_id}/{shoe_id}")
+def add_shoe_to_Collection(shoe_id: int, user_id: int):
     with db.engine.begin() as connection:
         connection.execute(sqlalchemy.text("""
                                            INSERT INTO shoes_to_users (shoe_id, user_id) 
@@ -38,22 +38,46 @@ def addTo_user_Collection(shoe_id: int, user_id: int):
                                         [{"shoe_id": shoe_id, "user_id": user_id}])
     return "OK"
 
-@router.get("/users/{user_id}/reviews")
-def get_users_reviews(user_id: int):
-    reviews = []
+@router.get("/{user_id}/reviews")
+def get_user_reviews(user_id: int):
+    """ """
     with db.engine.begin() as connection:
-        review_list = connection.execute(sqlalchemy.text(
-                                                    """
-                                                    SELECT * FROM reviews
-                                                    WHERE user_id = :user_id
-                                                    """), 
+        reviews = connection.execute(sqlalchemy.text("""
+                                                    SELECT shoe.name, rating, comment FROM ratings AS rating
+                                                    JOIN shoes AS shoe ON shoe.shoe_id = rating.shoe_id
+                                                    WHERE rating.user_id = :user_id
+                                                    """),
                                                     [{"user_id": user_id}])
-    for review in review_list:
-        reviews.append(
+    ratings = []
+    for review in reviews:
+        ratings.append(
                     {
-                    "shoe_id": review.shoe_id,
+                    "shoe_name": review.name,
                     "rating": review.rating,
                     "comment": review.comment
                     }
                     )
-    return reviews
+    
+    return ratings
+
+@router.put("/{user_id}/shoes")
+def get_user_collection(user_id: int):
+    """ """
+    with db.engine.begin() as connection:
+        collection = connection.execute(sqlalchemy.text(
+                                                    """
+                                                    SELECT name, rating, comment FROM shoes
+                                                    JOIN shoes_to_users AS join_table ON join_table.shoe_id = shoes.shoe_id
+                                                    WHERE join_table.user_id = :user_id
+                                                    """),
+                                                    [{"user_id": user_id}])
+        
+    shoes = []
+
+    for shoe in collection:
+        shoes.append(
+                {
+                "shoe_name": shoe.name
+                }
+        )
+    return shoes
