@@ -17,7 +17,7 @@ class User(BaseModel):
     email: str
     password: str
 
-@router.post("/{name}")
+@router.post("/")
 def create_user(name: str, username: str, email: int, password: str):
     """ """
     with db.engine.begin() as connection:
@@ -28,7 +28,7 @@ def create_user(name: str, username: str, email: int, password: str):
                                         [{"name": name, "username": username, "email": email, "password": password}])
     return "OK"
 
-@router.post("/{user_id}/shoes/{shoe_id}")
+@router.post("/{user_id}/shoes")
 def addTo_user_Collection(shoe_id: int, user_id: int):
     with db.engine.begin() as connection:
         connection.execute(sqlalchemy.text("""
@@ -38,7 +38,7 @@ def addTo_user_Collection(shoe_id: int, user_id: int):
                                         [{"shoe_id": shoe_id, "user_id": user_id}])
     return "OK"
 
-@router.get("/users/{user_id}/reviews")
+@router.get("/{user_id}/reviews")
 def get_users_reviews(user_id: int):
     reviews = []
     with db.engine.begin() as connection:
