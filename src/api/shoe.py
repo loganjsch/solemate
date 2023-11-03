@@ -46,7 +46,7 @@ def get_shoe(shoe_id: int):
         ave_rating = connection.execute(sqlalchemy.text(
                                                 """
                                                 SELECT AVG(rating)
-                                                FROM ratings
+                                                FROM reviews
                                                 WHERE shoe_id = :shoe_id
                                                 """), 
                                                 [{"shoe_id": shoe_id}]).scalar_one()
