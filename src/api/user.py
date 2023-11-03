@@ -38,22 +38,22 @@ def addTo_user_Collection(shoe_id: int, user_id: int):
                                         [{"shoe_id": shoe_id, "user_id": user_id}])
     return "OK"
 
-@router.get("/users/{user_id}/ratings")
-def get_users_ratings(user_id: int):
-    ratings = []
+@router.get("/users/{user_id}/reviews")
+def get_users_reviews(user_id: int):
+    reviews = []
     with db.engine.begin() as connection:
-        rating_list = connection.execute(sqlalchemy.text(
+        review_list = connection.execute(sqlalchemy.text(
                                                     """
-                                                    SELECT * FROM ratings
+                                                    SELECT * FROM reviews
                                                     WHERE user_id = :user_id
                                                     """), 
                                                     [{"user_id": user_id}])
-    for rating in rating_list:
-        ratings.append(
+    for review in rating_list:
+        reviews.append(
                     {
-                    "shoe_id": rating.shoe_id,
-                    "rating": rating.rating,
-                    "comment": rating.comment
+                    "shoe_id": review.shoe_id,
+                    "rating": review.rating,
+                    "comment": review.comment
                     }
                     )
-    return ratings
+    return reviews

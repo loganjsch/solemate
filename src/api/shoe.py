@@ -46,7 +46,7 @@ def get_shoe(shoe_id: int):
         ave_rating = connection.execute(sqlalchemy.text(
                                                 """
                                                 SELECT AVG(rating)
-                                                FROM ratings
+                                                FROM reviews
                                                 WHERE shoe_id = :shoe_id
                                                 """), 
                                                 [{"shoe_id": shoe_id}]).scalar_one()
@@ -70,7 +70,7 @@ def get_shoe_ratings(shoe_id: int):
         rating_list = connection.execute(sqlalchemy.text(
                                                 """
                                                 SELECT * 
-                                                FROM ratings
+                                                FROM reviews
                                                 WHERE shoe_id = :shoe_id
                                                 """), 
                                                 [{"shoe_id": shoe_id}])
@@ -89,7 +89,7 @@ def post_shoe_rating(shoe_id: str, user_id: str, rating: int, comment: str):
     """ """
     with db.engine.begin() as connection:
         connection.execute(sqlalchemy.text("""
-                                           INSERT INTO ratings (shoe_id, user_id, rating, comment) 
+                                           INSERT INTO reviews (shoe_id, user_id, rating, comment) 
                                            VALUES (:shoe_id, :user_id, :rating, :comment)
                                            """),
                                         [{"shoe_id": shoe_id, "user_id": user_id, "rating": rating, "comment": comment}])
