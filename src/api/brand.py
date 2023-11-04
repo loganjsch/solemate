@@ -1,6 +1,5 @@
 from fastapi import APIRouter, Depends
 from enum import Enum
-from backend import Shoe
 from pydantic import BaseModel
 from src.api import auth
 import sqlalchemy
