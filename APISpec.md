@@ -79,7 +79,6 @@ Returns shoes that match your search value
 **Request**:
 ```json
 {
-    
     "search_value": "string", 
 }
 ```
@@ -88,10 +87,10 @@ Returns shoes that match your search value
 ```json
 [
     {
-        "shoe_id": "integer"
+        "shoe_id": "integer",
         "shoe_name": "string", 
         "brand": "string",
-         "rating": integer
+        "rating": "integer"
     }
 
 ]
