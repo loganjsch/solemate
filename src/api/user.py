@@ -3,6 +3,8 @@ from pydantic import BaseModel
 from src.api import auth
 import sqlalchemy
 from src import database as db
+from sqlalchemy import or_
+
 
 router = APIRouter(
     prefix="/users",
@@ -85,3 +87,68 @@ def get_user_collection(user_id: int):
                 }
         )
     return shoes
+
+@router.get("/search/users", tags=["search"])
+def search_users(
+    search_value: str = "",
+    search_page: str = ""
+):
+    
+    limit = 30
+    
+    if search_page == "":
+        search_page = 0
+    else:
+        search_page = int(search_page)
+
+    stmt = (
+        sqlalchemy.select(
+            db.users.c.username,
+            db.users.c.name
+
+        )
+        .offset(search_page)
+        .limit(limit)
+    )
+
+
+    counting = (
+        sqlalchemy.select(
+            sqlalchemy.func.count().label("count")
+        )
+        .select_from(db.users)
+    )
+
+    stmt = stmt.where(or_(db.users.c.username.ilike(f"%{search_value}%"),db.users.c.name.ilike(f"%{search_value}%")))
+    counting = counting.where(or_(db.users.c.username.ilike(f"%{search_value}%"),db.users.c.name.ilike(f"%{search_value}%")))
+
+    with db.engine.connect() as conn:
+
+        result = conn.execute(stmt)
+        count = conn.execute(counting).scalar_one()
+
+        json = []
+        for row in result:
+            json.append(
+                {
+                    "name":row.name,
+                    "username": row.username
+                }
+            )
+
+    
+    #calculate search page here
+    prev = ""
+    next = ""
+
+    if search_page-limit >= 0:
+        prev = str(search_page-limit)
+
+    if search_page+limit < count:
+        next = str(search_page+limit)
+
+    return {
+        "previous": prev,
+        "next": next, 
+        "results": json
+    }
