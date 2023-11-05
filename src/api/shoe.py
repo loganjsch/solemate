@@ -93,3 +93,29 @@ def post_shoe_review(shoe_id: str, user_id: str, rating: int, comment: str):
                                            """),
                                         [{"shoe_id": shoe_id, "user_id": user_id, "rating": rating, "comment": comment}])
     return "OK"
+
+
+@router.get("/compare")
+def compare_shoes(shoe_id_1: int, shoe_id_2: int):
+    with db.engine.begin() as connection:
+            shoes = connection.execute(sqlalchemy.text("""
+                SELECT s.shoe_id, s.name, s.brand, s.fit, s.price, AVG(r.rating) as avg_rating
+                FROM shoes s
+                LEFT JOIN reviews r ON r.shoe_id = s.shoe_id
+                WHERE s.shoe_id IN (:shoe_id_1, :shoe_id_2)
+                GROUP BY s.shoe_id
+            """), {"shoe_id_1": shoe_id_1, "shoe_id_2": shoe_id_2}).fetchall()
+
+            if len(shoes) != 2:
+                return {}
+
+            response = {
+                "shoe_ids":[shoes[0].shoe_id, shoes[1].shoe_id],
+                "shoe_names":[shoes[0].name, shoes[1].name],
+                "brands":[shoes[0].brand, shoes[1].brand],
+                "fits":[shoes[0].fit, shoes[1].fit],
+                "retail_prices":[shoes[0].price, shoes[1].price],
+                "ratings":[shoes[0].avg_rating, shoes[1].avg_rating]
+            }
+
+            return response
