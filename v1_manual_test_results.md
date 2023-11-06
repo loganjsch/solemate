@@ -173,7 +173,6 @@ curl -X 'GET' \
 ]
 
 
-
 # /shoe/{shoe_id}/ratings/{user_id} (POST)
 
 ## Curl:
@@ -202,27 +201,74 @@ Finally, he decided that these are the shoes for him and buys them from Footlock
 # /users/create/ShoeGod (POST)
 
 ## Curl:
+curl -X 'POST' \
+  'https://solemate.onrender.com/users/?name=ShoeGod&username=ShoeGod&email=Shoe%40gods.com&password=ShoeBoi' \
+  -H 'accept: application/json' \
+  -H 'access_token: solemateAPI' \
+  -d ''
 
 ## Response:
+"OK"
 
 # /shoes/catalog (GET)
 
 ## Curl:
-
+curl -X 'GET' \
+  'https://solemate.onrender.com/shoes' \
+  -H 'accept: application/json'
+  
 ## Response:
+[
+  {
+    "name": "Mindblower",
+    "brand": "Fila",
+    "avg_rating": null
+  },
+  {
+    "name": "Gel-Venture 8",
+    "brand": "Asics",
+    "avg_rating": null
+  },...
+  ]
 
 # /search/users (GET)
 
 ## Curl:
-
+curl -X 'GET' \
+  'https://solemate.onrender.com/users/search/users?search_value=ShoeGod' \
+  -H 'accept: application/json' \
+  -H 'access_token: solemateAPI'
+  
 ## Response:
-
+{
+  "previous": "",
+  "next": "",
+  "results": [
+    {
+      "name": "ShoeGod",
+      "username": "ShoeGod"
+    }
+  ]
+}
 # /users/ShoeGod (GET)
 
 ## Curl:
+curl -X 'GET' \
+  'https://solemate.onrender.com/users/4/shoes' \
+  -H 'accept: application/json' \
+  -H 'access_token: solemateAPI'
 
 ## Response:
-
+[...,{
+    "shoe_id": 877,
+    "name": "Blazer Mid '77",
+    "brand": "Nike",
+    "price": 100,
+    "color": "White",
+    "material": "Leather",
+    "tags": null
+  },...
+  ]
 # /shoes/{shoe_id} (GET)
 
 ## Curl:
@@ -232,5 +278,11 @@ Finally, he decided that these are the shoes for him and buys them from Footlock
 # /shoes/add (POST)
 
 ## Curl:
+curl -X 'POST' \
+  'https://solemate.onrender.com/users/4/877' \
+  -H 'accept: application/json' \
+  -H 'access_token: solemateAPI' \
+  -d ''
 
 ## Response:
+"OK"
