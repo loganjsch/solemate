@@ -184,3 +184,29 @@ curl -X 'POST' \
 
 ## Response:
 "OK"
+
+
+# Workflow 2
+**User wants to leave a review for a pair of shoes that they own.**
+
+# /shoes (GET)
+
+## Curl:
+curl -X 'GET' \
+  'https://solemate.onrender.com/shoes' \
+  -H 'accept: application/json'
+
+## Response:
+[
+ {
+  "shoe_id": 2,
+  "name": "Ultra Boost 21",
+  "brand": "Adidas",
+  "price": 180,
+  "color": "Black",
+  "material": "Primeknit",
+  "tags": null,
+  "type": "Running",
+  "rating": 5
+},
+  {
