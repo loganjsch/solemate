@@ -272,9 +272,21 @@ curl -X 'GET' \
 # /shoes/{shoe_id} (GET)
 
 ## Curl:
+curl -X 'GET' \
+  'https://solemate.onrender.com/shoes/877' \
+  -H 'accept: application/json' \
+  -H 'access_token: solemateAPI'
 
 ## Response:
-
+[{
+    "shoe_id": 877,
+    "name": "Blazer Mid '77",
+    "brand": "Nike",
+    "price": 100,
+    "color": "White",
+    "material": "Leather",
+    "tags": null
+  }]
 # /shoes/add (POST)
 
 ## Curl:
