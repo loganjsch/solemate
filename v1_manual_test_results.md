@@ -187,26 +187,50 @@ curl -X 'POST' \
 
 
 # Workflow 2
-**User wants to leave a review for a pair of shoes that they own.**
+## User wants to search for a shoe to buy.
 
-# /shoes (GET)
+Daniel the hypebeast comes to Solemate because he is researching what type of shoe he should get next. He starts
+by browsing through the initial shoes shown on the home screen but is still unsure. He decides to browse the reviews of a trusted source before making his decision. First, Daniel requests a catalog of the website's shoe library by calling GET /shoes/catalog.
+Daniel sees some pretty cool-looking shoes in the catalog, but none seem to match his taste. 
+He then thinks of the influencer ShoeGod who recommended his website and decided to check out his account.
+Then he calls GET /search/users with the value "ShoeGod" to look up the account of the influencer he wanted.
+He sees the correct account and click on it, which calls GET /users/{user_id}/.
+While scrolling through them, he notices a pair of shoes he likes that are rated highly,
+so he decides to click on them, which calls GET /shoes/{shoe_id}.
+Finally, he decided that these are the shoes for him and buys them from Footlocker. Afterwards, hesaves them to his profile catalog by calling POST /shoes/add and entering in their shoe id.
+
+# /users/create/ShoeGod (POST)
 
 ## Curl:
-curl -X 'GET' \
-  'https://solemate.onrender.com/shoes' \
-  -H 'accept: application/json'
 
 ## Response:
-[
- {
-  "shoe_id": 2,
-  "name": "Ultra Boost 21",
-  "brand": "Adidas",
-  "price": 180,
-  "color": "Black",
-  "material": "Primeknit",
-  "tags": null,
-  "type": "Running",
-  "rating": 5
-},
-  {
+
+# /shoes/catalog (GET)
+
+## Curl:
+
+## Response:
+
+# /search/users (GET)
+
+## Curl:
+
+## Response:
+
+# /users/ShoeGod (GET)
+
+## Curl:
+
+## Response:
+
+# /shoes/{shoe_id} (GET)
+
+## Curl:
+
+## Response:
+
+# /shoes/add (POST)
+
+## Curl:
+
+## Response:
