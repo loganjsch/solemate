@@ -311,6 +311,7 @@ Daniel, an avid runner, is in a dilemma. He's been eyeing the Adidas Ultraboost 
 curl -X 'GET' \
   'https://solemate.onrender.com/search/shoes?search_value=UltraBoost%2020' \
   -H 'accept: application/json'
+  -H 'access_token: solemateAPI'
 
 ## Response:
 {
@@ -333,6 +334,7 @@ curl -X 'GET' \
 curl -X 'GET' \
   'https://solemate.onrender.com/search/shoes?search_value=Free%20Run' \
   -H 'accept: application/json'
+  -H 'access_token: solemateAPI'
 
 ## Response:
 {
