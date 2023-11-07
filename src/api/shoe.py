@@ -41,7 +41,7 @@ def get_shoe(shoe_id: int):
                                                 """
                                                 SELECT shoes.shoe_id,name,brand,price,color,material,tags,type, AVG(rating) as avg
                                                 FROM shoes
-                                                JOIN reviews ON reviews.shoe_id = shoes.shoe_id
+                                                LEFT JOIN reviews ON reviews.shoe_id = shoes.shoe_id
                                                 WHERE shoes.shoe_id = :shoe_id
                                                 GROUP BY shoes.shoe_id
                                                 """), 
