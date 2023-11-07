@@ -298,3 +298,85 @@ curl -X 'POST' \
 
 ## Response:
 "OK"
+
+# Workflow 3
+## User wants to compare two shoes.
+
+Daniel, an avid runner, is in a dilemma. He's been eyeing the Adidas Ultraboost and the Nike Free Run for his upcoming marathon but can't decide which one to buy. Eager to make an informed decision, he turns to Solemate's comparison feature. Logging in, he first searches for the shoe wants by calling /search/shoes/ by entering "Ultraboost 20" and then again with "Free Run" and notes their shoe ids. Then he calls /shoes/compare with both of the shoe ids. Moments later, a side-by-side comparison of the two loads up, fetched from the /shoes/compare endpoint. As he scans the detailed specifications, ratings, and top reviews presented in a neat tabular format, Daniel notices the Adidas Ultraboost's superior cushioning and slightly higher average rating. The comparison makes his choice clear: the Adidas Ultraboost is the one for him.
+
+
+# /search/shoes/ (GET)
+
+## Curl:
+curl -X 'GET' \
+  'https://solemate.onrender.com/search/shoes?search_value=UltraBoost%2020' \
+  -H 'accept: application/json'
+
+## Response:
+{
+  "previous": "",
+  "next": "",
+  "results": [
+    {
+      "shoe_id": 476,
+      "shoe_name": "Ultraboost 20",
+      "brand": "Adidas",
+      "price": 180,
+      "rating": null
+    }
+  ]
+}
+
+# /search/shoes/ (GET)
+
+## Curl:
+curl -X 'GET' \
+  'https://solemate.onrender.com/search/shoes?search_value=Free%20Run' \
+  -H 'accept: application/json'
+
+## Response:
+{
+  "previous": "",
+  "next": "",
+  "results": [
+    {
+      "shoe_id": 1008,
+      "shoe_name": "Free Run 5.0",
+      "brand": "Nike",
+      "price": 120,
+      "rating": null
+    }
+  ]
+}
+
+# /shoes/compare/{shoe_id_1}/{shoe_id_2}
+
+## Curl:
+curl -X 'GET' \
+  'https://solemate.onrender.com/shoes/compare/476/1008' \
+  -H 'accept: application/json' \
+  -H 'access_token: solemateAPI'
+
+## Responses:
+{
+  "shoe_ids": [
+    476,
+    1008
+  ],
+  "shoe_names": [
+    "Ultraboost 20",
+    "Free Run 5.0"
+  ],
+  "brands": [
+    "Adidas",
+    "Nike"
+  ],
+  "retail_prices": [
+    180,
+    120
+  ],
+  "ratings": [
+    5,
+    3.5
+  ]
+}
