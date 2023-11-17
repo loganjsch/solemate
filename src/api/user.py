@@ -30,7 +30,7 @@ def create_user(name: str, username: str, email: str, password: str):
                                         [{"name": name, "username": username, "email": email, "password": password}])
     return "OK"
 
-@router.post("/{user_id}/{shoe_id}")
+@router.post("/{user_id}/shoes/{shoe_id}")
 def add_shoe_to_Collection(shoe_id: int, user_id: int):
     with db.engine.begin() as connection:
         connection.execute(sqlalchemy.text("""
@@ -88,7 +88,7 @@ def get_user_collection(user_id: int):
         )
     return shoes
 
-@router.get("/search/users", tags=["search"])
+@router.get("/search/", tags=["search"])
 def search_users(
     search_value: str = "",
     search_page: str = ""
