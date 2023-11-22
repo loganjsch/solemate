@@ -5,6 +5,8 @@ from src.api import auth
 import sqlalchemy
 from src import database as db
 
+
+
 router = APIRouter(
     prefix="/brands",
     tags=["brands"],
@@ -30,7 +32,8 @@ class ShoeCompany(BaseModel):
 @router.post("/{brand_id}/shoes")
 def post_shoe(name: str, brand: str, price: int, color: str, material: str, tags: list[str], type: str):
     """Add new shoe to the app"""
-    print(name, brand, price, color, material, tags, type)
+    
+    #add login verification
     with db.engine.begin() as connection:
         connection.execute(sqlalchemy.text("""
             INSERT INTO shoes (name, brand, price, color, material, tags, type)
@@ -42,6 +45,8 @@ def post_shoe(name: str, brand: str, price: int, color: str, material: str, tags
 @router.post("/")
 def create_brand(brand_name: str, email: str, password: str):
     """ """
+
+    # add password encryption
     with db.engine.begin() as connection:
         connection.execute(sqlalchemy.text("""
                                            INSERT INTO brands (brand_name, email, password) 
@@ -49,3 +54,5 @@ def create_brand(brand_name: str, email: str, password: str):
                                            """),
                                         [{"brand_name": brand_name, "email": email, "password": password}])
     return "OK"
+
+#add login and logout endpoints
