@@ -81,19 +81,28 @@ def get_shoe_reviews(shoe_id: int):
                     )
     return reviews
 
-@router.post("/{shoe_id}/review")
+@router.post("/{shoe_id}/review/{user_id}")
 def post_shoe_review(shoe_id: str, user_id: str, rating: int, comment: str):
     """ """
     if rating > 5 or rating < 1:
         return "INVALID RATING (1-5 INCLUSIVE)"
     with db.engine.begin() as connection:
+        response = connection.execute(sqlalchemy.text("""
+                                            SELECT is_logged_in
+                                            FROM users
+                                            WHERE user_id = :user_id
+                                           """),
+                                        [{"user_id": user_id}]).scalar_one()
+        
+        if response != True:
+            return "Login to Access this feature"
+
         connection.execute(sqlalchemy.text("""
                                            INSERT INTO reviews (shoe_id, user_id, rating, comment) 
                                            VALUES (:shoe_id, :user_id, :rating, :comment)
                                            """),
                                         [{"shoe_id": shoe_id, "user_id": user_id, "rating": rating, "comment": comment}])
     return "OK"
-
 
 @router.get("/compare/{shoe_id_1}/{shoe_id_2}")
 def compare_shoes(shoe_id_1: int, shoe_id_2: int):
