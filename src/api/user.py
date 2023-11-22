@@ -1,9 +1,17 @@
+import base64
+import os
+import dotenv
+from cryptography.fernet import Fernet
+from cryptography.hazmat.primitives import hashes
+from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
 from fastapi import APIRouter, Depends
 from pydantic import BaseModel
 from src.api import auth
 import sqlalchemy
 from src import database as db
 from sqlalchemy import or_
+from cryptography.fernet import Fernet
+import re
 
 
 router = APIRouter(
@@ -12,6 +20,7 @@ router = APIRouter(
     dependencies=[Depends(auth.get_api_key)],
 )
 
+
 class User(BaseModel):
     user_id: int
     name: str
@@ -19,26 +28,158 @@ class User(BaseModel):
     email: str
     password: str
 
-@router.post("/")
+@router.post("/create")
 def create_user(name: str, username: str, email: str, password: str):
     """ """
-    with db.engine.begin() as connection:
-        connection.execute(sqlalchemy.text("""
-                                           INSERT INTO users (name, username, email, password) 
-                                           VALUES (:name, :username, :email, :password)
-                                           """),
-                                        [{"name": name, "username": username, "email": email, "password": password}])
-    return "OK"
 
+    #check if password long enough
+    if len(password) < 8:
+        return "Password must be atleast 8 characters"
+
+    #check for valid email
+    regex = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,7}\b'
+
+    if(not re.fullmatch(regex, email)):
+        return("Invalid Email")
+
+    #add salt & encrypt password before insertion
+    dotenv.load_dotenv()
+    crypto_key = bytes(os.environ.get("CRYPTO_KEY"),'utf-8')
+
+    salt = os.urandom(16)
+
+    kdf = PBKDF2HMAC(
+        algorithm=hashes.SHA256(),
+        length=32,
+        salt=salt,
+        iterations=480000,
+    )
+
+    key = base64.urlsafe_b64encode(kdf.derive(crypto_key))
+    f = Fernet(key)
+
+    password = f.encrypt(bytes(password,'utf-8'))
+
+    with db.engine.begin() as connection:
+        #check if username already in use
+        validUser = connection.execute(sqlalchemy.text("""
+                                                SELECT username FROM users
+                                                WHERE username = :username
+                                            """),
+                                            [{"username": username}]).all()
+        
+        if len(validUser) > 0:
+            return "Username Already In Use. Pick Another Username"
+        
+        #check if email already in use
+        validEmail = connection.execute(sqlalchemy.text("""
+                                                SELECT email FROM users
+                                                WHERE email = :email
+                                            """),
+                                            [{"email": email}]).all()
+        
+        if len(validEmail) > 0:
+            return "Email Already In Use. Use Another Email"
+
+        #insert user info into users table
+        try:
+            connection.execute(sqlalchemy.text("""
+                                                INSERT INTO users (name, username, email, password,salt,is_logged_in) 
+                                                VALUES (:name, :username, :email, :password,:salt,FALSE)
+                                            """),
+                                            [{"name": name, "username": username, "email": email, "password": password,"salt":salt}])
+        except Exception:
+            print("Couldn't Create Account")
+            
+    return "Account Successfully Created. Please Login to Continue"
+
+
+@router.post("/login")
+def login(username: str, password: str):
+    with db.engine.begin() as connection:
+        response = connection.execute(sqlalchemy.text("""
+                                            SELECT password,salt
+                                            FROM users
+                                            WHERE username = :username
+                                           """),
+                                        [{"username": username}]).first()
+    
+        if not response:
+            return "Invalid Username"
+        
+        #Get key for decyption
+        dotenv.load_dotenv()
+        crypto_key = bytes(os.environ.get("CRYPTO_KEY"),'utf-8')
+        
+        #get user values from database
+        pw = bytes(response.password)
+        salt = bytes(response.salt)
+
+        kdf = PBKDF2HMAC(
+        algorithm=hashes.SHA256(),
+        length=32,
+        salt=salt,
+        iterations=480000,
+        )
+
+        key = base64.urlsafe_b64encode(kdf.derive(crypto_key))
+        f = Fernet(key)
+        token = f.decrypt(pw)
+
+        if token == bytes(password,'utf-8'):
+            connection.execute(sqlalchemy.text("""
+                                            UPDATE users
+                                            SET is_logged_in = TRUE
+                                            WHERE username = :username
+                                           """),
+                                        [{"username": username}])
+
+            return "Logged In"
+        else:
+            return "Incorrect Password"
+
+@router.post("/logout/{user_id}")
+def logout(user_id:int):
+    with db.engine.begin() as connection:
+        response = connection.execute(sqlalchemy.text("""
+                                            SELECT is_logged_in
+                                            FROM users
+                                            WHERE user_id = :user_id
+                                           """),
+                                        [{"user_id": user_id}]).scalar_one()
+        
+        if response != True:
+            return "Cannot Logout"
+        
+        connection.execute(sqlalchemy.text("""
+                                            UPDATE users
+                                            SET is_logged_in = FALSE
+                                            WHERE user_id = :user_id
+                                           """),
+                                        [{"user_id": user_id}])
+
+        return "Logged Out"
+        
 @router.post("/{user_id}/shoes/{shoe_id}")
 def add_shoe_to_Collection(shoe_id: int, user_id: int):
     with db.engine.begin() as connection:
+        response = connection.execute(sqlalchemy.text("""
+                                            SELECT is_logged_in
+                                            FROM users
+                                            WHERE user_id = :user_id
+                                           """),
+                                        [{"user_id": user_id}]).scalar_one()
+        
+        if response != True:
+            return "Login to Access this feature"
+
+
         connection.execute(sqlalchemy.text("""
                                            INSERT INTO shoes_to_users (shoe_id, user_id) 
                                            VALUES (:shoe_id, :user_id)
                                            """),
                                         [{"shoe_id": shoe_id, "user_id": user_id}])
-    return "OK"
+    return "Sucessfully Added"
 
 @router.get("/{user_id}/reviews")
 def get_user_reviews(user_id: int):
