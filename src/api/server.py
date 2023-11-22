@@ -36,7 +36,6 @@ app.include_router(catalog.router)
 app.include_router(shoe.router)
 app.include_router(user.router)
 app.include_router(brand.router)
-app.include_router(admin.router)
 
 @app.exception_handler(exceptions.RequestValidationError)
 @app.exception_handler(ValidationError)
