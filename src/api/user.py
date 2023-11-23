@@ -29,7 +29,7 @@ class User(BaseModel):
     password: str
 
 @router.post("/create")
-def create_user(name: str, username: str, email: str, password: str):
+def create_user(name: str, username: str, email: str, password: str,address:str):
     """ """
 
     #check if password long enough
@@ -84,10 +84,10 @@ def create_user(name: str, username: str, email: str, password: str):
         #insert user info into users table
         try:
             connection.execute(sqlalchemy.text("""
-                                                INSERT INTO users (name, username, email, password,salt,is_logged_in) 
-                                                VALUES (:name, :username, :email, :password,:salt,FALSE)
+                                                INSERT INTO users (name, username, email, password,salt,address) 
+                                                VALUES (:name, :username, :email, :password,:salt,:address)
                                             """),
-                                            [{"name": name, "username": username, "email": email, "password": password,"salt":salt}])
+                                            [{"name": name, "username": username, "email": email, "password": password,"salt":salt,"address":address}])
         except Exception:
             print("Couldn't Create Account")
             
@@ -293,3 +293,43 @@ def search_users(
         "next": next, 
         "results": json
     }
+
+@router.get("/{user_id}/orders")
+def get_orders(user_id: int):
+    """ """
+    with db.engine.begin() as connection:
+
+        ###Authentication
+        response = connection.execute(sqlalchemy.text("""
+                                            SELECT is_logged_in
+                                            FROM users
+                                            WHERE user_id = :user_id
+                                           """),
+                                        [{"user_id": user_id}]).scalar_one()
+        
+        if response != True:
+            return "Login to Access this feature"
+        #####
+
+
+        orders = connection.execute(sqlalchemy.text(
+                                                    """
+                                                    SELECT orders.created_at,shoes.shoe_id,brand,name,quantity FROM orders
+                                                    JOIN shoes ON shoes.shoe_id = orders.shoe_id
+                                                    WHERE orders.user_id = :user_id
+                                                    """),
+                                                    [{"user_id": user_id}])
+        
+    ret = []
+
+    for order in orders:
+        ret.append(
+                {
+                "shoe_id": order.shoe_id,
+                "brand": order.brand,
+                "shoe_name": order.name,
+                "quantity": order.quantity,
+                "order_time": order.created_at.ctime(),
+                }
+        )
+    return ret
