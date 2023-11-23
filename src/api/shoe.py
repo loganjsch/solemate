@@ -84,9 +84,10 @@ def get_shoe_reviews(shoe_id: int):
 @router.post("/{shoe_id}/review/{user_id}")
 def post_shoe_review(shoe_id: str, user_id: str, rating: int, comment: str):
     """ """
-    if rating > 5 or rating < 1:
-        return "INVALID RATING (1-5 INCLUSIVE)"
+
+    
     with db.engine.begin() as connection:
+        ### Authentication
         response = connection.execute(sqlalchemy.text("""
                                             SELECT is_logged_in
                                             FROM users
@@ -96,13 +97,41 @@ def post_shoe_review(shoe_id: str, user_id: str, rating: int, comment: str):
         
         if response != True:
             return "Login to Access this feature"
-
+        #####
+        
+        #check for valid rating
+        if rating > 5 or rating < 1:
+            return "INVALID RATING (1-5 INCLUSIVE)"
+        
+        #check for valid comment
+        if len(comment) > 500:
+            return "Comment Cannoct Exceed 500 Characters"
+        
+        #check how many points were earned in last 24 hours
+        points24 = connection.execute(sqlalchemy.text("""
+                                           SELECT COALESCE(SUM(point_change),0)
+                                           FROM point_ledger
+                                           WHERE user_id = :user_id AND created_at >= NOW() - '1 day'::INTERVAL AND point_change > 0
+                                            
+                                           """),
+                                        [{"user_id": user_id}]).scalar_one()
+        
+        #insert points so total for last 24 hours <= 100
+        point_change = min(100-points24,len(comment)//10)
+        connection.execute(sqlalchemy.text("""
+                                           INSERT INTO point_ledger (user_id,point_change) 
+                                           VALUES (:user_id,:point_change)
+                                           """),
+                                        [{"user_id": user_id,"point_change":point_change}])
+        
+        #insert review into reviews
         connection.execute(sqlalchemy.text("""
                                            INSERT INTO reviews (shoe_id, user_id, rating, comment) 
                                            VALUES (:shoe_id, :user_id, :rating, :comment)
                                            """),
                                         [{"shoe_id": shoe_id, "user_id": user_id, "rating": rating, "comment": comment}])
-    return "OK"
+
+    return "Points Earned: " + str(point_change)
 
 @router.get("/compare/{shoe_id_1}/{shoe_id_2}")
 def compare_shoes(shoe_id_1: int, shoe_id_2: int):
