@@ -93,7 +93,25 @@ def create_user(name: str, username: str, email: str, password: str,address:str)
             
     return "Account Successfully Created. Please Login to Continue"
 
+@router.post("delete")
+def delete(username: str):
+    with db.engine.begin() as connection:
+        response = connection.execute(sqlalchemy.text("""
+            SELECT username
+            FROM users
+            WHERE username = :username
+            """), {"username": username}).first()
 
+        if not response:
+            return "Invalid Username"
+        
+        connection.execute(sqlalchemy.text("""
+            DELETE FROM users
+            WHERE username = :username
+        """
+        ), {"username": username})
+
+    return "Account Deleted"
 @router.post("/login")
 def login(username: str, password: str):
     with db.engine.begin() as connection:
