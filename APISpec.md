@@ -4,7 +4,7 @@
 # 1. Users
 
 ## 1.1 Create Account - `/users/` (POST)
-Users create an account
+Users create an account  
 
 **Request**:
 
@@ -20,7 +20,7 @@ Users create an account
 ```
 
 ## 1.2 Login to Account - `/users/login` (POST)
-Users Login to their Account
+Users Login to their Account  
 
 **Request**:
 
@@ -32,7 +32,7 @@ Users Login to their Account
 ```
 
 ## 1.3 Logout of Account - `/users/logout/{user_id}` (POST)
-Users log out of their account
+Users log out of their account  
 
 **Request**:
 
@@ -42,7 +42,7 @@ Users log out of their account
 }
 ```
 ## 1.4 Delete Account - `/users/{user_id}/delete` (POST)
-Deletes a user's account.
+Deletes a user's account.  
 
 **Request**:
 
@@ -53,7 +53,7 @@ Deletes a user's account.
 ```
 
 ## 1.5 Add Shoes to User's Collection - `/users/{user_id}/shoes/{shoe_id}` (POST)
-Add a pair of shoes to a user's collection
+Add a pair of shoes to a user's collection  
 **Request**:
 
 ```json
