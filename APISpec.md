@@ -48,7 +48,7 @@ Deletes a user's account.
 
 ```json
 {
-    "user_id": int,
+    "user_id": "integer",
 }
 ```
 
@@ -58,22 +58,22 @@ Add a pair of shoes to a user's collection
 
 ```json
 {
-    "shoe_id": int,
-    "user_id": int,
+    "shoe_id": "integer",
+    "user_id": "integer",
 }
 ```
 ## 1.6 Get a User's Reviews - `/users/{user_id}/reviews` (GET)
 **Request**:
 ```json
 {
-    "user_id": int,
+    "user_id": "integer",
 }
 ```
 **Response**:
 ```json
 [{
     "shoe_name": "string",
-    "rating": int,
+    "rating": "integer",
     "comment": "string",
 }]
 ```
@@ -81,13 +81,13 @@ Add a pair of shoes to a user's collection
 **Request**:
 ```json
 {
-    "user_id": int,
+    "user_id": "integer",
 }
 ```
 **Response**:
 ```json
 [{
-    "shoe_id": int,
+    "shoe_id": "integer",
     "shoe_name": "string",
     "brand": "string",
     "color": "strong",
@@ -124,7 +124,7 @@ Add a pair of shoes to a user's collection
     "shoe_id": "string",
     "brand": "string",
     "shoe_name": "string",
-    "quantiy": int,
+    "quantiy": "integer",
     "order_time": DateTime,
 }
 ```
