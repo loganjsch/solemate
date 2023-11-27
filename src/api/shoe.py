@@ -143,7 +143,7 @@ def compare_shoes(shoe_id_1: int, shoe_id_2: int):
             LEFT JOIN reviews r ON r.shoe_id = s.shoe_id
             WHERE s.shoe_id = :shoe_id_1
             GROUP BY s.shoe_id, s.name, s.brand, s.price
-        """), {"shoe_id_1": shoe_id_1}).fetchone()
+        """), {"shoe_id_1": shoe_id_1})
 
         shoe2 = connection.execute(sqlalchemy.text("""
             SELECT s.shoe_id, s.name, s.brand, s.price, AVG(r.rating) as avg_rating
@@ -151,7 +151,7 @@ def compare_shoes(shoe_id_1: int, shoe_id_2: int):
             LEFT JOIN reviews r ON r.shoe_id = s.shoe_id
             WHERE s.shoe_id = :shoe_id_2
             GROUP BY s.shoe_id, s.name, s.brand, s.price
-        """), {"shoe_id_2": shoe_id_2}).fetchone()
+        """), {"shoe_id_2": shoe_id_2})
 
         response = {
             "shoe_ids":[shoe1.shoe_id, shoe2.shoe_id],

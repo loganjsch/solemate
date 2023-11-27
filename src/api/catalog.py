@@ -13,22 +13,16 @@ router = APIRouter(
 @router.get("/shoes", tags=["shoes"])
 def get_shoe_catalog():
     """ """
+    page = 1
     with db.engine.begin() as connection:
         catalog = connection.execute(sqlalchemy.text("""SELECT shoes.shoe_id,name,brand,AVG(rating) as avg
                                                      FROM shoes 
                                                      LEFT JOIN reviews ON shoes.shoe_id = reviews.shoe_id
                                                      GROUP BY shoes.shoe_id
-                                                     ORDER BY RANDOM()
-                                                     LIMIT 10"""))
-    ret = []
-    for shoe in catalog:
-        ret.append(
-            {
-                "name": shoe.name,
-                "brand": shoe.brand,
-                "avg_rating": shoe.avg
-            }
-        )
+                                                     ORDER BY ASC
+                                                     LIMIT 10 
+                                                     OFFSET :offset""".format("name")), {"offset": (page - 1) * 10})
+    ret = [dict(shoe) for shoe in catalog]
     return ret
 
 
