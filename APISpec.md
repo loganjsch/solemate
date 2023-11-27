@@ -123,7 +123,7 @@ Add a pair of shoes to a user's collection
 {
     "shoe_id": "string",
     "brand": "string",
-    "shoe_name": "string,
+    "shoe_name": "string",
     "quantiy": int,
     "order_time": DateTime,
 }
