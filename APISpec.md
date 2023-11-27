@@ -1,17 +1,20 @@
 # API Specification
 
 
-# 1. Accounts
+# 1. Users
 
-## 1.1 Create Account - `/users/create` (POST)
+## 1.1 Create Account - `/users/` (POST)
 Users create an account
 
 **Request**:
 
 ```json
 {
+    "name": "string",
     "username": "string",
+    "email": "string",
     "password": "string",
+    "address": "string",
 
 }
 ```
@@ -23,11 +26,8 @@ Users Login to their Account
 
 ```json
 {
-    "name": "string",
     "username": "string",
-    "email": "string",
     "password": "string",
-
 }
 ```
 
@@ -41,9 +41,96 @@ Users log out of their account
     "user_id": "integer",
 }
 ```
+## 1.4 Delete Account - `/users/{user_id}/delete` (POST)
+Deletes a user's account.
+
+**Request**:
+
+```json
+{
+    "user_id": int,
+}
+```
+
+## 1.5 Add Shoes to User's Collection - `/users/{user_id}/shoes/{shoe_id}` (POST)
+Add a pair of shoes to a user's collection
+**Request**:
+
+```json
+{
+    "shoe_id": int,
+    "user_id": int,
+}
+```
+## 1.6 Get a User's Reviews - `/users/{user_id}/reviews` (GET)
+**Request**:
+```json
+{
+    "user_id": int,
+}
+```
+**Response**:
+```json
+[{
+    "shoe_name": "string",
+    "rating": int,
+    "comment": "string",
+}]
+```
+## 1.7 Get a User's Collection of Shoes - `/users/{user_id}/shoes` (GET)
+**Request**:
+```json
+{
+    "user_id": int,
+}
+```
+**Response**:
+```json
+[{
+    "shoe_id": int,
+    "shoe_name": "string",
+    "brand": "string",
+    "color": "strong",
+    "material": "string",
+    "price": float,
+}]
+```
+## 1.8 Search Users - `/users/search` (GET)
+**Request**:
+```json
+{
+    "search_value": "string",
+    "search_page": "string",
+}
+```
+**Response**:
+```json
+{
+    "previous": "string",
+    "next": "string",
+     "results": json,
+}
+```
+## 1.9 Get User's orders - `/users/{user_id}/orders` (GET)
+**Request**:
+```json
+{
+    "user_id": "string",
+}
+```
+**Response**:
+```json
+{
+    "shoe_id": "string",
+    "brand": "string",
+    "shoe_name": "string,
+    "quantiy": int,
+    "order_time": DateTime,
+}
+```
 
 
-# 2. Get Shoe Info
+# 2. Shoe
 
 ## 2.1. Get Shoe - `/shoes/{shoe_id}` (GET)
 
