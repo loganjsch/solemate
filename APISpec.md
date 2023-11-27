@@ -129,10 +129,18 @@ Add a pair of shoes to a user's collection
 }
 ```
 
+## 1.10 Get Points - `/users/{user_id}/points` (GET)
+
+**Request**:
+```json
+{
+    "user_id": "string",
+}
+```
 
 # 2. Shoe
 
-## 2.1. Get Shoe - `/shoes/{shoe_id}` (GET)
+## 2.1 Get Shoe - `/shoes/{shoe_id}` (GET)
 
 Returns shoe info for the shoe you are looking at
 
@@ -149,6 +157,68 @@ Returns shoe info for the shoe you are looking at
     "rating": "integer"
 }
 ```
+
+## 2.2 Get Shoe REviews - `/shoes/{shoe_id}/reviews` (GET)
+
+Returns shoe reviews for the shoe you are looking at  
+**Request**:
+
+```json
+{
+    "shoe_id": "integer",
+}
+```
+
+**Response**:
+
+```json
+{
+    "user_id": "integer",
+    "rating": "integer",
+    "comment": "string",
+}
+```
+
+## 2.3 Post Shoe Review - `/shoes/reviews/{user_id}` (GET)
+
+Post a review for the shoe you are looking at
+
+**Request**:
+
+```json
+{
+    "shoe_id": "integer",
+    "user_id": "integer",
+    "rating": "integer",
+    "comment": "string",
+}
+```
+
+## 2.4 Compare Two Shoes - `/shoes/comare/{shoe_id_1}/{shoe_id_2}` (GET)
+
+Compare two shoes that a user is interested in
+
+**Request**:
+
+```json
+{
+    "shoe_id_1": "integer",
+    "shoe_id_2": "integer",
+}
+```
+**Response**:
+
+```json
+{
+    "shoe_ids": ["integer"],
+    "shoe_names": ["string"],
+    "brands": ["string"],
+    "retail_prices": ["float"],
+    "ratings": ["float"],
+}
+```
+
+
 
 # 3. Leave Rating
 
