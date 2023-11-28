@@ -4,7 +4,7 @@
 # 1. User
 
 ## 1.1 Create Account - `/users/` (POST)
-Users create an account  
+User create an account  
 
 **Request**:
 
@@ -20,7 +20,7 @@ Users create an account
 ```
 
 ## 1.2 Login to Account - `/users/login` (POST)
-Users Login to their Account  
+User logs in to their Account  
 
 **Request**:
 
@@ -32,7 +32,7 @@ Users Login to their Account
 ```
 
 ## 1.3 Logout of Account - `/users/{user_id}/logout` (POST)
-Users log out of their account  
+User logs out of their account  
 
 **Request**:
 
@@ -362,16 +362,61 @@ Search for a shoe
 }]
 ```
 
+# 6 Brand
 
+## 6.1 Post Shoe - `/brands/{brand_id}/shoes` (POST)
 
+Add new brand shoe to the app  
 
+**Request**:
 
+```json
+[{
+    "brand_id": "integer",
+    "name": "string",
+    "price": "integer",
+    "color": "string",
+    "material": "string",
+    "tags": ["string"],
+    "type": "string",
+}]
+```
 
+## 6.2 Create Brand - `/brands/` (POST)
 
+Add new brand to the app  
 
+**Request**:
 
+```json
+[{
+    "brand_name": "string",
+    "email": "string",
+    "password": "string",
+}]
+```
 
+## 6.3 Brand Login - `/brands/login` (POST)
 
+Brand logs into their account
 
+**Request**:
 
+```json
+[{
+    "brand_name": "string",
+    "password": "string",
+}]
+```
 
+## 6.4 Brand Logout - `/brands/{brand_id}/logout` (POST)
+
+Brand logs into their account
+
+**Request**:
+
+```json
+{
+    "brand_id": "integer",
+}
+```
