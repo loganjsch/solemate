@@ -111,6 +111,11 @@ def enter_raffle(user_id:int,entries:int,raffle_id:int):
         if points_available < entries * raffle.price:
             return "ERROR: Insufficient Points"
 
+        connection.execute(sqlalchemy.text("""
+                                           INSERT INTO point_ledger (user_id,point_change) 
+                                           VALUES (:user_id,:point_change)
+                                           """),
+                                        [{"user_id": user_id,"point_change":-entries*raffle.price}])
 
         for i in range(entries):
             connection.execute(sqlalchemy.text
