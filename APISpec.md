@@ -218,7 +218,7 @@ Compare two shoes that a user is interested in
 }
 ```
 
-# 3 Raffle
+# 3. Raffle
 
 ## 3.1 Get Raffles - `/raffles/` (GET)
 
@@ -250,7 +250,7 @@ Enters a user into a raffle
 }]
 ```
 
-# 4 Prize
+# 4. Prize
 
 ## 4.1 Get Prizes - `/prizes/` (GET)
 
@@ -323,7 +323,7 @@ Checkouts a user cart
 }]
 ```
 
-# 5 Catalog
+# 5. Catalog
 
 ## 5.1 Get Shoe Catalog - `/shoes` (GET)
 
@@ -362,7 +362,7 @@ Search for a shoe
 }]
 ```
 
-# 6 Brand
+# 6. Brand
 
 ## 6.1 Post Shoe - `/brands/{brand_id}/shoes` (POST)
 
