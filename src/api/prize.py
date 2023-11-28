@@ -12,7 +12,7 @@ router = APIRouter(
 )
 
 
-@router.get("")
+@router.get("/")
 def get_prizes():
     """Returns list of all available prizes"""
     
@@ -42,7 +42,7 @@ def get_prizes():
 
         return ret
     
-@router.post("/cart/{user_id}")
+@router.post("/carts/{user_id}")
 def create_cart(user_id: int):
     """ """
     with db.engine.begin() as connection:
@@ -54,7 +54,7 @@ def create_cart(user_id: int):
     
     return {"cart_id": id}
 
-@router.post("/carts/{cart_id}/add")
+@router.post("/carts/{cart_id}/{shoe_id}")
 def set_item_quantity(cart_id: int, shoe_id:int,quantity:int):
     """ """
     try:

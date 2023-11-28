@@ -33,7 +33,7 @@ def get_shoe_catalog():
 
 
 
-@router.get("/shoes/search/", tags=["search"])
+@router.get("/shoes/search", tags=["search"])
 def search_shoes(
     search_value: str = "",
     search_page: str = ""

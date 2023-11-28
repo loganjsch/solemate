@@ -28,7 +28,7 @@ class User(BaseModel):
     email: str
     password: str
 
-@router.post("/create")
+@router.post("/")
 def create_user(name: str, username: str, email: str, password: str,address:str):
     """ """
 
@@ -93,25 +93,6 @@ def create_user(name: str, username: str, email: str, password: str,address:str)
             
     return "Account Successfully Created. Please Login to Continue"
 
-@router.post("delete")
-def delete(username: str):
-    with db.engine.begin() as connection:
-        response = connection.execute(sqlalchemy.text("""
-            SELECT username
-            FROM users
-            WHERE username = :username
-            """), {"username": username}).first()
-
-        if not response:
-            return "Invalid Username"
-        
-        connection.execute(sqlalchemy.text("""
-            DELETE FROM users
-            WHERE username = :username
-        """
-        ), {"username": username})
-
-    return "Account Deleted"
 @router.post("/login")
 def login(username: str, password: str):
     with db.engine.begin() as connection:
@@ -156,7 +137,7 @@ def login(username: str, password: str):
         else:
             return "Incorrect Password"
 
-@router.post("/logout/{user_id}")
+@router.post("/{user_id}/logout")
 def logout(user_id:int):
     with db.engine.begin() as connection:
         response = connection.execute(sqlalchemy.text("""
@@ -178,6 +159,26 @@ def logout(user_id:int):
 
         return "Logged Out"
         
+@router.post("/{user_id}/delete")
+def delete(user_id: str):
+    with db.engine.begin() as connection:
+        response = connection.execute(sqlalchemy.text("""
+            SELECT username
+            FROM users
+            WHERE user_id = :user_id
+            """), {"user_id": user_id}).first()
+
+        if not response:
+            return "Invalid User"
+        
+        connection.execute(sqlalchemy.text("""
+            DELETE FROM users
+            WHERE user_id = :user_id
+        """
+        ), {"user_id": user_id})
+
+    return "Account Deleted"
+
 @router.post("/{user_id}/shoes/{shoe_id}")
 def add_shoe_to_Collection(shoe_id: int, user_id: int):
     with db.engine.begin() as connection:
@@ -351,3 +352,31 @@ def get_orders(user_id: int):
                 }
         )
     return ret
+
+@router.get("/{user_id}/points")
+def get_points(user_id: int):
+    """Retrieve total points for a user"""
+    
+    with db.engine.begin() as connection:
+
+        ###Authentication
+        response = connection.execute(sqlalchemy.text("""
+                                            SELECT is_logged_in
+                                            FROM users
+                                            WHERE user_id = :user_id
+                                           """),
+                                        [{"user_id": user_id}]).scalar_one()
+        
+        if response != True:
+            return "Login to Access this feature"
+        #####
+        
+        points = connection.execute(sqlalchemy.text("""
+                                            SELECT COALESCE(SUM(point_change),0)
+                                            FROM point_ledger
+                                            WHERE user_id = :user_id
+                                           """),
+                                        [{"user_id": user_id}]).scalar_one()
+
+
+        return "TOTAL POINTS: " + str(points)
