@@ -323,10 +323,44 @@ Checkouts a user cart
 }]
 ```
 
+# 5 Catalog
 
+## 5.1 Get Shoe Catalog - `/shoes` (GET)
 
+Returns 10 random shoes to serve as the website homepage
 
+**Response**:
 
+```json
+[{
+    "name": "string",
+    "brand": "name",
+    "avg_rating": "float"
+}]
+```
+
+## 5.2 Search Shoes - `/shoes/search' (GET)
+
+Search for a shoe
+
+**Request**:
+
+```json
+[{
+    "search_value": "string",
+    "search_page": "string",
+}]
+```
+
+**Response**:
+
+```json
+[{
+    "previous": "string",
+    "next": "string",
+    "results": json
+}]
+```
 
 
 
