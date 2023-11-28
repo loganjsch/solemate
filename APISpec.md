@@ -415,7 +415,7 @@ Brand logs into their account
 
 ## 6.4 Brand Logout - `/brands/{brand_id}/logout` (POST)
 
-Brand logs into their account
+Brand logs out of their account
 
 **Request**:
 
