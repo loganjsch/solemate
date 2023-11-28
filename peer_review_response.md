@@ -13,7 +13,7 @@
 - Addressed rest within reason
 ## Schema/API Design Comments
 ### Response:
-- We used a csv to populate table, otherwise this is a good decision, maybe implement in the future.
+- We used a csv to populate table, otherwise using id values for color, material, etc. is a good decision, maybe implement in the future.
 - Shoe brand has a shoe brand name and id
 - Users can delete review and accounts
 - Some features may be added in the future, but aren't suggestions on our already implemented API specs
