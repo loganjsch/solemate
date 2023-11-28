@@ -81,7 +81,7 @@ def get_shoe_reviews(shoe_id: int):
                     )
     return reviews
 
-@router.post("/{shoe_id}/review/{user_id}")
+@router.post("/{shoe_id}/reviews/{user_id}")
 def post_shoe_review(shoe_id: str, user_id: str, rating: int, comment: str):
     """ """
 

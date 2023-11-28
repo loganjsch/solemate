@@ -6,41 +6,12 @@ from src import database as db
 
 
 router = APIRouter(
-    prefix="/raffle",
+    prefix="/raffles",
     tags=["raffle"],
     dependencies=[Depends(auth.get_api_key)],
-)
+)    
 
-@router.get("/points/{user_id}")
-def get_points(user_id: int):
-    """Retrieve total points for a user"""
-    
-    with db.engine.begin() as connection:
-
-        ###Authentication
-        response = connection.execute(sqlalchemy.text("""
-                                            SELECT is_logged_in
-                                            FROM users
-                                            WHERE user_id = :user_id
-                                           """),
-                                        [{"user_id": user_id}]).scalar_one()
-        
-        if response != True:
-            return "Login to Access this feature"
-        #####
-        
-        points = connection.execute(sqlalchemy.text("""
-                                            SELECT COALESCE(SUM(point_change),0)
-                                            FROM point_ledger
-                                            WHERE user_id = :user_id
-                                           """),
-                                        [{"user_id": user_id}]).scalar_one()
-
-
-        return "TOTAL POINTS: " + str(points)
-    
-
-@router.get("")
+@router.get("/")
 def get_raffles():
     """Returns list of all available raffles"""
     
@@ -70,7 +41,7 @@ def get_raffles():
 
         return ret
     
-@router.get("/enter/{user_id}")
+@router.post("/{raffle_id}/{user_id}")
 def enter_raffle(user_id:int,entries:int,raffle_id:int):
     """Enters user into raffle of their choosing"""
     

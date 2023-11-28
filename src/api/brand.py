@@ -171,7 +171,7 @@ def login(brand_name: str, password: str):
         else:
             return "Incorrect Password"
         
-@router.post("/logout/{brand_id}")
+@router.post("/{brand_id}/logout")
 def logout(brand_id:int):
     with db.engine.begin() as connection:
         response = connection.execute(sqlalchemy.text("""

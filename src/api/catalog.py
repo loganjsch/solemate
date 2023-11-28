@@ -1,13 +1,10 @@
-from fastapi import APIRouter, Depends
-from src.api import auth
+from fastapi import APIRouter
 import sqlalchemy
 from src import database as db
 from sqlalchemy import func,or_
 
 
-router = APIRouter(
-    dependencies=[Depends(auth.get_api_key)]
-)
+router = APIRouter()
 
 
 @router.get("/shoes", tags=["shoes"])
@@ -33,7 +30,7 @@ def get_shoe_catalog():
 
 
 
-@router.get("/shoes/search/", tags=["search"])
+@router.get("/shoes/search", tags=["search"])
 def search_shoes(
     search_value: str = "",
     search_page: str = ""
