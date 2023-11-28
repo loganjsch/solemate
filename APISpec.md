@@ -63,6 +63,7 @@ Add a pair of shoes to a user's collection
 }
 ```
 ## 1.6 Get a User's Reviews - `/users/{user_id}/reviews` (GET)
+Returns a list of a user's reviews
 **Request**:
 ```json
 {
@@ -78,6 +79,7 @@ Add a pair of shoes to a user's collection
 }]
 ```
 ## 1.7 Get a User's Collection of Shoes - `/users/{user_id}/shoes` (GET)
+Returns a list of shoes added to a user's collection
 **Request**:
 ```json
 {
@@ -96,6 +98,7 @@ Add a pair of shoes to a user's collection
 }]
 ```
 ## 1.8 Search Users - `/users/search` (GET)
+Search for users by attributes
 **Request**:
 ```json
 {
@@ -112,6 +115,7 @@ Add a pair of shoes to a user's collection
 }
 ```
 ## 1.9 Get User's orders - `/users/{user_id}/orders` (GET)
+Returns a list of a users orders from winning prizes
 **Request**:
 ```json
 {
@@ -130,7 +134,7 @@ Add a pair of shoes to a user's collection
 ```
 
 ## 1.10 Get Points - `/users/{user_id}/points` (GET)
-
+Returns the total points a user has
 **Request**:
 ```json
 {
