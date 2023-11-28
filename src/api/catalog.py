@@ -1,10 +1,13 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
+from src.api import auth
 import sqlalchemy
 from src import database as db
 from sqlalchemy import func,or_
 
 
-router = APIRouter()
+router = APIRouter(
+    dependencies=[Depends(auth.get_api_key)]
+)
 
 
 @router.get("/shoes", tags=["shoes"])
