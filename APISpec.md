@@ -1,7 +1,7 @@
 # API Specification
 
 
-# 1. Users
+# 1. User
 
 ## 1.1 Create Account - `/users/` (POST)
 Users create an account  
@@ -194,7 +194,7 @@ Post a review for the shoe you are looking at
 }
 ```
 
-## 2.4 Compare Two Shoes - `/shoes/comare/{shoe_id_1}/{shoe_id_2}` (GET)
+## 2.4 Compare Two Shoes - `/shoes/compare/{shoe_id_1}/{shoe_id_2}` (GET)
 
 Compare two shoes that a user is interested in
 
@@ -249,4 +249,95 @@ Enters a user into a raffle
     "entries": "integer",
 }]
 ```
+
+# 4 Prize
+
+## 4.1 Get Prizes - `/prizes/` (GET)
+
+Retruns a list of all of the prizes
+
+**Response**:
+
+```json
+[{
+    "shoe_id": "integer",
+    "shoe_brand": "string",
+    "shoe_name": "string",
+     "quantity": "integer",
+    "point_cost": "integer"
+}]
+```
+
+## 4.2 Create Cart - `/prizes/carts/{user_id}` (POST)
+
+Creates a cart for a user  
+
+**Request**:
+
+```json
+[{
+    "user_id": "integer",
+}]
+```
+
+**Response**:
+
+```json
+[{
+    "cart_id": "integer",
+}]
+```
+
+## 4.3 Set Cart Item Quantity - `/prizes/carts/{cart_id}/{shoe_id}` (POST)
+
+Creates a cart for a user  
+
+**Request**:
+
+```json
+[{
+    "cart_id": "integer",
+    "shoe_id": "integer",
+    "quantity": "integer",
+}]
+```
+
+## 4.4 Checkout - `/prizes/carts/{cart_id}/checkout` (POST)
+
+Checkouts a user cart
+
+**Request**:
+
+```json
+[{
+    "cart_id": "integer",
+}]
+```
+
+**Response**:
+
+```json
+[{
+    "shoes_bought": "integer",
+    "points_spent": "integer",
+}]
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
