@@ -12,10 +12,10 @@
 - Also the user will ideally be logged in, so no need for password verification when performing actions
 - Addressed rest within reason
 ## Schema/API Design Comments
-## Response:
+### Response:
 - We used a csv to populate table, otherwise this is a good decision, maybe implement in the future.
 - Shoe brand has a shoe brand name and id
 - Users can delete review and accounts
 - Some features may be added in the future, but aren't suggestions on our already implemented API specs
 - Some of the suggestions aren't realistically implementable
-## Test Results and Product Ideas were left out because the tests acted as expected and we already implemented our own complex endpoints that got approved by the professor.
+### Test Results and Product Ideas were left out because the tests acted as expected and we already implemented our own complex endpoints that got approved by the professor.
