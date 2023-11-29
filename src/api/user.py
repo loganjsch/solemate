@@ -83,15 +83,16 @@ def create_user(name: str, username: str, email: str, password: str,address:str)
 
         #insert user info into users table
         try:
-            connection.execute(sqlalchemy.text("""
+            userid = connection.execute(sqlalchemy.text("""
                                                 INSERT INTO users (name, username, email, password,salt,address) 
-                                                VALUES (:name, :username, :email, :password,:salt,:address)
+                                                VALUES (:name, :username, :email, :password,:salt,:address),
+                                                RETURNING id
                                             """),
-                                            [{"name": name, "username": username, "email": email, "password": password,"salt":salt,"address":address}])
+                                            [{"name": name, "username": username, "email": email, "password": password,"salt":salt,"address":address}]).scalar_one()
         except Exception:
             print("Couldn't Create Account")
             
-    return "Account Successfully Created. Please Login to Continue"
+    return "Account" + userid + " Successfully Created. Please Login to Continue."
 
 @router.post("/login")
 def login(username: str, password: str):
