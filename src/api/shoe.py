@@ -36,6 +36,7 @@ class Rating(BaseModel):
 @router.get("/{shoe_id}")
 def get_shoe(shoe_id: int):
     """ """
+    ##TODO Edge case 1 (Rohit) - Add exception for non-existent student id
     with db.engine.begin() as connection:
         shoe = connection.execute(sqlalchemy.text(
                                                 """
@@ -136,6 +137,7 @@ def post_shoe_review(shoe_id: str, user_id: str, rating: int, comment: str):
 @router.get("/compare/{shoe_id_1}/{shoe_id_2}")
 def compare_shoes(shoe_id_1: int, shoe_id_2: int):
     """"""
+    #TODO Edge case 1 (Rohit) - Add exceptions for non existent shoe_id
     with db.engine.begin() as connection:
         shoe1 = connection.execute(sqlalchemy.text("""
             SELECT s.shoe_id, s.name, s.brand, s.price, AVG(r.rating) as avg_rating
