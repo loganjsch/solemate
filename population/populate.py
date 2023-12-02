@@ -274,7 +274,7 @@ with engine.begin() as conn:
 
     #new engine connection to ensure that shoes table exists
 
-    num_users = 500
+    num_users = 85000
     total_shoes = 0
     total_reviews = 0
     shoes_to_users = []
@@ -283,7 +283,7 @@ with engine.begin() as conn:
     reviews = []
     points= []
 
-    shoe_sample_distribution = np.random.default_rng().negative_binomial(0.55, 0.11, num_users)
+    shoe_sample_distribution = np.random.default_rng().negative_binomial(0.5, 0.11, num_users)
     
     for i in range(num_users):
         #create profile
@@ -296,7 +296,7 @@ with engine.begin() as conn:
             "created_at":creation_date , 
             "name": profile['name'], 
             "username": fake.first_name()[0].lower() + fake.last_name().lower() + str(i) , 
-            "email": fake.unique.ascii_free_email(),
+            "email": str(i) + fake.unique.ascii_free_email(),
             "password":password,"salt":salt,
             "address":profile['address'],
             "is_logged_in":fake.pybool()
@@ -317,7 +317,7 @@ with engine.begin() as conn:
             comment = fake.text(max_nb_chars = rand.randint(100,500),ext_word_list = review_list)
             comment_date = fake.date_time_between(start_date=creation_date, end_date='now', tzinfo=None)
 
-            if fake.pybool(83) is True:
+            if fake.pybool(75) is True:
                 total_reviews += 1
                 sample_rating = np.random.choice([1, 2, 3, 4, 5],
                                                  1,
@@ -336,8 +336,8 @@ with engine.begin() as conn:
                     "user_id": id,
                     "point_change": len(comment)//10
                 })
-
-    fake.unique.clear()
+        fake.unique.clear()
+        
   
     #calculate number of raffles
     num_raffles = 52 * 3
@@ -345,7 +345,8 @@ with engine.begin() as conn:
     orders = []
     raffle_entries = []
 
-    participants = np.random.default_rng().negative_binomial(1, 0.01, num_raffles)//10
+    participants = np.random.default_rng().negative_binomial(0.75, 0.003, num_raffles)
+
 
     for i in range(num_raffles):
         start_time = fake.date_time_between(start_date='-3y', end_date='now', tzinfo=None)
@@ -405,7 +406,7 @@ with engine.begin() as conn:
     
         for _ in range(max(participants[i].item(),1)):
 
-            other_entries = np.random.default_rng().negative_binomial(1, 0.6, 1).item()
+            other_entries = max(np.random.default_rng().negative_binomial(1, 0.5, 1).item(),1)
 
             if other_entries > 0:
                 enterers.append({
@@ -428,13 +429,7 @@ with engine.begin() as conn:
                 "point_change":user['entries'] * ticket_cost * -1
                 }
             )
-            points.append(
-                {
-                "created_at":entry_time - datetime.timedelta(days=10),
-                "user_id":user['user_id'],
-                "point_change":user['entries'] * ticket_cost
-                }
-            )
+
 
 
     fake.unique.clear()
@@ -480,13 +475,10 @@ with engine.begin() as conn:
                 "point_change":  prize_cost * -1
                 }
             )
-            points.append(
-                {
-                "created_at":prize_date - datetime.timedelta(days=10),
-                "user_id":user['user_id'],
-                "point_change":prize_cost * ticket_cost
-                }
-            )
+
+            orders.append({"created_at":prize_date,
+                           "user_id":prize_user,
+                           "shoe_id":prize_shoe})
     fake.unique.clear()
 
 
@@ -522,11 +514,21 @@ with engine.begin() as conn:
                 """), cart_items)
 
     
+    print("brands:" + str(len(brandnames)))
+    print("shoes: " + str(num_shoes))
     print("users: "  + str(num_users))
-    print("shoes: " + str(len(shoes_to_users)))
+    print("user_shoes: " + str(len(shoes_to_users)))
     print("reviews: " + str(len(reviews)))
     print("points: " + str(len(points)))
     print("orders: " + str(len(orders)))
     print("raffle_entries: " + str(len(raffle_entries)))
+    print("raffles: " + str(num_raffles))
+    print("prizes: " + str(num_raffles))
     print("cart_items: " + str(len(cart_items)))
+    print("carts: " + str(len(cart_items)) )
+
+    total_rows = len(brandnames) + num_shoes + num_users + len(shoes_to_users) + len(reviews) + len(points) + len(orders) + len(raffle_entries) + num_raffles + num_raffles + len(cart_items) + len(cart_items)
+    print("\ntotal rows: " + str(total_rows))
+
+
     
