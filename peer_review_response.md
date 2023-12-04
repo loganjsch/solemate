@@ -25,14 +25,14 @@
 ### Reponse: 
 - Right now there would be no functional use for name to take up two fields.
 Define specifications for a user's username, and implement a check within the create user function to see if the username already exists.
-- The post shoe function is the creation of a shoe object in our data base, so there's nothing to create with if without those fields.
+- The post shoe function is the creation of a shoe object in our data base, so yes. we've implemented the object logic.
 - The same applies for shoe brand. We are getting the fields from user input.
 - This is good advice haven't gotten to it yet.
 - Removed sensitive info
-- Same stuff for other object creation
+- Same stuff for other object creation, implemented it.
 - Encrypted passwords
 - Implemented returning userId
-- Same object thing
+- Same object thing, implemented it.
 - Updated API Spec file
 - user will be logged in password checks would be unnecessary
 ## Schema/API Design Comments
