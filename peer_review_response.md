@@ -46,4 +46,4 @@ Define specifications for a user's username, and implement a check within the cr
 - Will enhance search
  - the UI will interperet this all
 - shoe relationship would be defined as many to many, a user likes multiples shoes and multiples users can like a shoe.
-- shoes_to_users was unnecssary and is no longer used good catch
+- shoes_to_users is a necessary join table because users can have many shoes
