@@ -99,6 +99,14 @@ def post_shoe_review(shoe_id: str, user_id: str, rating: int, comment: str):
         if response != True:
             return "Login to Access this feature"
         #####
+        #check if user added shoe to profile
+        user_shoe = connection.execute(sqlalchemy.text("""
+            SELECT * FROM shoes_to_users
+            WHERE user_id = :user_id AND shoe_id = :shoe_id
+        """), {"user_id": user_id, "shoe_id": shoe_id}).fetchone()
+
+        if not user_shoe:
+            return "User has not added this shoe to their profile"
         
         #check for valid rating
         if rating > 5 or rating < 1:
@@ -133,6 +141,31 @@ def post_shoe_review(shoe_id: str, user_id: str, rating: int, comment: str):
                                         [{"shoe_id": shoe_id, "user_id": user_id, "rating": rating, "comment": comment}])
 
     return "Points Earned: " + str(point_change)
+
+@router.post("/{shoe_id}/reviews/{rating_id}")
+def delete_shoe_review(rating_id: int):
+    with db.engine.begin() as connection:
+        review = connection.execute(sqlalchemy.text("""
+            SELECT user_id, comment FROM reviews
+            WHERE id = :rating_id
+        """), {"rating_id": rating_id}).fetchone()
+
+        if not review:
+            return "Review not found"
+
+        points_to_deduct = len(review.comment) // 10
+
+        connection.execute(sqlalchemy.text("""
+            INSERT INTO point_ledger (user_id, point_change)
+            VALUES (:user_id, :point_change)
+        """), {"user_id": review.user_id, "point_change": -points_to_deduct})
+
+        connection.execute(sqlalchemy.text("""
+            DELETE FROM reviews
+            WHERE id = :rating_id
+        """), {"rating_id": rating_id})
+
+        return "Review and points deleted successfully"
 
 @router.get("/compare/{shoe_id_1}/{shoe_id_2}")
 def compare_shoes(shoe_id_1: int, shoe_id_2: int):
