@@ -2,7 +2,9 @@ from fastapi import APIRouter, Depends
 from src.api import auth
 import sqlalchemy
 from src import database as db
-from sqlalchemy import func,or_
+from sqlalchemy import func,or_,and_
+import sys
+from pydantic import BaseModel
 
 
 router = APIRouter(
@@ -32,10 +34,15 @@ def get_shoe_catalog():
     return ret
 
 
-
 @router.get("/shoes/search", tags=["search"])
 def search_shoes(
-    search_value: str = "",
+    search_string: str = "",
+    brand:str = "",
+    color:str = "",
+    type:str = "",
+    material: str = "",
+    max_price:int = sys.maxsize,
+    min_price: int = 0,
     search_page: str = ""
 ):
     
@@ -52,6 +59,7 @@ def search_shoes(
             db.shoes.c.name,
             db.shoes.c.brand,
             db.shoes.c.price,
+            db.shoes.c.color,
             func.avg(db.reviews.c.rating).label("avg")
         )
         .join(db.reviews,db.reviews.c.shoe_id == db.shoes.c.shoe_id,isouter=True)
@@ -69,19 +77,51 @@ def search_shoes(
         .select_from(db.shoes)
     )
 
-    stmt = stmt.where(or_(db.shoes.c.name.ilike(f"%{search_value}%"),
-                          db.shoes.c.brand.ilike(f"%{search_value}%"),
-                          db.shoes.c.type.ilike(f"%{search_value}%"),
-                          db.shoes.c.color.ilike(f"%{search_value}%"),
-                          db.shoes.c.material.ilike(f"%{search_value}%"),
-                          func.array_to_string(db.shoes.c.tags,',').ilike(f"%{search_value}%")))
+    if color == "" and brand == "" and material == "" and type == "":
+
+        stmt = stmt.where(or_(db.shoes.c.name.ilike(f"%{search_string}%"),
+                            db.shoes.c.brand.ilike(f"%{search_string}%"),
+                            db.shoes.c.type.ilike(f"%{search_string}%"),
+                            db.shoes.c.color.ilike(f"%{search_string}%"),
+                            db.shoes.c.material.ilike(f"%{search_string}%"),
+                            func.array_to_string(db.shoes.c.tags,',').ilike(f"%{search_string}%")))
+        
+        counting = counting.where(or_(db.shoes.c.name.ilike(f"%{search_string}%"),
+                            db.shoes.c.brand.ilike(f"%{search_string}%"),
+                            db.shoes.c.type.ilike(f"%{search_string}%"),
+                            db.shoes.c.color.ilike(f"%{search_string}%"),
+                            db.shoes.c.material.ilike(f"%{search_string}%"),
+                            func.array_to_string(db.shoes.c.tags,',').ilike(f"%{search_string}%")))
+    else:
     
-    counting = counting.where(or_(db.shoes.c.name.ilike(f"%{search_value}%"),
-                          db.shoes.c.brand.ilike(f"%{search_value}%"),
-                          db.shoes.c.type.ilike(f"%{search_value}%"),
-                          db.shoes.c.color.ilike(f"%{search_value}%"),
-                          db.shoes.c.material.ilike(f"%{search_value}%"),
-                          func.array_to_string(db.shoes.c.tags,',').ilike(f"%{search_value}%")))
+        if color != "":
+            stmt = stmt.where(db.shoes.c.color.ilike(f"%{color}%"))
+            counting = counting.where(db.shoes.c.color.ilike(f"%{color}%"))
+        
+        if type != "":
+            stmt = stmt.where(db.shoes.c.type.ilike(f"%{type}%"))
+            counting = counting.where(db.shoes.c.type.ilike(f"%{type}%"))
+
+        if material != "":
+            stmt = stmt.where(db.shoes.c.material.ilike(f"%{material}%"))
+            counting = counting.where(db.shoes.c.material.ilike(f"%{material}%"))
+
+        if brand != "":
+            stmt = stmt.where(db.shoes.c.brand.ilike(f"%{brand}%"))
+            counting = counting.where(db.shoes.c.brand.ilike(f"%{brand}%"))
+
+        stmt = stmt.where(or_(db.shoes.c.name.ilike(f"%{search_string}%"),
+                            func.array_to_string(db.shoes.c.tags,',').ilike(f"%{search_string}%")))
+        
+        counting = counting.where(or_(db.shoes.c.name.ilike(f"%{search_string}%"),
+                            func.array_to_string(db.shoes.c.tags,',').ilike(f"%{search_string}%")))
+
+    stmt = stmt.where(and_(db.shoes.c.price > min_price,
+                        db.shoes.c.price < max_price ))
+    
+    counting = counting.where(and_(db.shoes.c.price > min_price,
+                        db.shoes.c.price < max_price ))
+
 
     with db.engine.connect() as conn:
 
@@ -96,6 +136,7 @@ def search_shoes(
                     "shoe_name": row.name,
                     "brand": row.brand,
                     "price": row.price,
+                    "color":row.color,
                     "rating": row.avg,
                 }
             )
