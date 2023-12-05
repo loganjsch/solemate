@@ -22,24 +22,24 @@ router = APIRouter(
 
 
 class User(BaseModel):
-    user_id: int
     name: str
     username: str
     email: str
     password: str
+    address: str
 
 @router.post("/")
-def create_user(name: str, username: str, email: str, password: str,address:str):
+def create_user(user:User):
     """ """
 
     #check if password long enough
-    if len(password) < 8:
+    if len(user.password) < 8:
         return "Password must be atleast 8 characters"
 
     #check for valid email
     regex = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,7}\b'
 
-    if(not re.fullmatch(regex, email)):
+    if(not re.fullmatch(regex, user.email)):
         return("Invalid Email")
 
     #add salt & encrypt password before insertion
@@ -58,7 +58,7 @@ def create_user(name: str, username: str, email: str, password: str,address:str)
     key = base64.urlsafe_b64encode(kdf.derive(crypto_key))
     f = Fernet(key)
 
-    password = f.encrypt(bytes(password,'utf-8'))
+    user.password = f.encrypt(bytes(user.password,'utf-8'))
 
     with db.engine.begin() as connection:
         #check if username already in use
@@ -66,7 +66,7 @@ def create_user(name: str, username: str, email: str, password: str,address:str)
                                                 SELECT username FROM users
                                                 WHERE username = :username
                                             """),
-                                            [{"username": username}]).all()
+                                            [{"username": user.username}]).all()
         
         if len(validUser) > 0:
             return "Username Already In Use. Pick Another Username"
@@ -76,7 +76,7 @@ def create_user(name: str, username: str, email: str, password: str,address:str)
                                                 SELECT email FROM users
                                                 WHERE email = :email
                                             """),
-                                            [{"email": email}]).all()
+                                            [{"email": user.email}]).all()
         
         if len(validEmail) > 0:
             return "Email Already In Use. Use Another Email"
@@ -88,7 +88,7 @@ def create_user(name: str, username: str, email: str, password: str,address:str)
                                                 VALUES (:name, :username, :email, :password,:salt,:address),
                                                 RETURNING id
                                             """),
-                                            [{"name": name, "username": username, "email": email, "password": password,"salt":salt,"address":address}]).scalar_one()
+                                            [{"name": user.name, "username": user.username, "email": user.email, "password": user.password,"salt":salt,"address":user.address}]).scalar_one()
         except Exception:
             print("Couldn't Create Account")
             
