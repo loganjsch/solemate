@@ -199,15 +199,6 @@ def delete(user_id: str):
 @router.post("/{user_id}/shoes/{shoe_id}")
 def add_shoe_to_Collection(shoe_id: int, user_id: int):
     with db.engine.begin() as connection:
-        is_logged_in = connection.execute(sqlalchemy.text("""
-                                            SELECT is_logged_in
-                                            FROM users
-                                            WHERE user_id = :user_id
-                                           """),
-                                        [{"user_id": user_id}]).scalar_one()
-        
-        if is_logged_in != True:
-            return "Login to Access this feature"
 
         # Check if both user and shoe exist
         user_and_shoe_exist = connection.execute(sqlalchemy.text("""
@@ -222,6 +213,15 @@ def add_shoe_to_Collection(shoe_id: int, user_id: int):
         if user_and_shoe_exist.shoe_count == 0:
             raise HTTPException(status_code=404, detail=f"Shoe with ID {shoe_id} not found")
 
+        is_logged_in = connection.execute(sqlalchemy.text("""
+                                            SELECT is_logged_in
+                                            FROM users
+                                            WHERE user_id = :user_id
+                                           """),
+                                        [{"user_id": user_id}]).scalar_one()
+        
+        if is_logged_in != True:
+            return "Login to Access this feature"
 
         connection.execute(sqlalchemy.text("""
                                            INSERT INTO shoes_to_users (shoe_id, user_id) 
