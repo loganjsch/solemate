@@ -28,7 +28,7 @@ def get_shoe_catalog():
             {
                 "name": shoe.name,
                 "brand": shoe.brand,
-                "avg_rating": shoe.avg
+                "avg_rating": round(shoe.avg,2)
             }
         )
     return ret
@@ -137,7 +137,7 @@ def search_shoes(
                     "brand": row.brand,
                     "price": row.price,
                     "color":row.color,
-                    "rating": row.avg,
+                    "rating": round(row.avg,2),
                 }
             )
 

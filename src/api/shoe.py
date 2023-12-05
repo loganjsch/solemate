@@ -57,7 +57,7 @@ def get_shoe(shoe_id: int):
         "material": shoe.material,
         "tags": shoe.tags,
         "type": shoe.type,
-        "rating": shoe.avg
+        "rating": round(shoe.avg,2)
         }
 
 @router.get("/{shoe_id}/reviews")
@@ -193,7 +193,7 @@ def compare_shoes(shoe_id_1: int, shoe_id_2: int):
             "shoe_names": [shoe1.name, shoe2.name],
             "brands":[shoe1.brand, shoe2.brand],
             "retail_prices":[shoe1.price, shoe2.price],
-            "ratings":[shoe1.avg_rating, shoe2.avg_rating]
+            "ratings":[round(shoe1.avg_rating,2), round(shoe2.avg_rating,2)]
         }
 
         return response
