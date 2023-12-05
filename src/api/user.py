@@ -92,7 +92,7 @@ def create_user(name: str, username: str, email: str, password: str,address:str)
         except Exception:
             print("Couldn't Create Account")
             
-    return "Account" + userid + " Successfully Created. Please Login to Continue."
+    return {"message": "Account Successfully Created. Please Login to Continue.", "user_id": userid}
 
 @router.post("/login")
 def login(username: str, password: str):

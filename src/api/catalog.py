@@ -20,7 +20,7 @@ def get_shoe_catalog():
                                                      FROM shoes 
                                                      LEFT JOIN reviews ON shoes.shoe_id = reviews.shoe_id
                                                      GROUP BY shoes.shoe_id
-                                                     ORDER BY RANDOM()
+                                                     ORDER BY brand
                                                      LIMIT 10"""))
     ret = []
     for shoe in catalog:

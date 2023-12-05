@@ -20,7 +20,6 @@ router = APIRouter(
 )
 
 class Shoe(BaseModel):
-    shoe_id: int
     name: str
     brand: str
     price: int
@@ -29,14 +28,8 @@ class Shoe(BaseModel):
     tags: list[str]
     type: str
 
-class ShoeCompany(BaseModel):
-    brand_name: str
-    email: str
-    pasword: str
-    shoes: list[Shoe]
-
 @router.post("/{brand_id}/shoes")
-def post_shoe(brand_id:int,name: str, brand: str, price: int, color: str, material: str, tags: list[str], type: str):
+def post_shoe(brand_id:int, new_shoe: Shoe):
     """Add new shoe to the app"""
     
 
@@ -57,7 +50,7 @@ def post_shoe(brand_id:int,name: str, brand: str, price: int, color: str, materi
         connection.execute(sqlalchemy.text("""
             INSERT INTO shoes (name, brand, price, color, material, tags, type)
             VALUES (:name, :brand, :price, :color, :material, :tags, :type)
-        """), {"name": name, "brand": brand, "price": price, "color": color, "material": material, "tags": tags, "type": type})
+        """), {"name": new_shoe.name, "brand": new_shoe.brand, "price": new_shoe.price, "color": new_shoe.color, "material": new_shoe.material, "tags": new_shoe.tags, "type": new_shoe.type})
 
         return "OK"
 
