@@ -76,16 +76,16 @@ def set_item_quantity(cart_id: int, shoe_id:int, cart_quantity: CartQuantity):
             if not prizes:
                 raise Exception ("ERROR: Invalid shoe_id")
             
-            if prizes.quantity < quantity:
+            if prizes.quantity < cart_quantity.quantity:
                 raise Exception ("ERROR: quantity higher than inventory")
             
-            if quantity < 1:
+            if cart_quantity.quantity < 1:
                 raise Exception ("ERROR: quantity cannot be less than 1")
 
 
             connection.execute(sqlalchemy.text("""INSERT INTO prize_cart_items (cart_id,shoe_id,quantity)
                                                 VALUES( :cart_id,:shoe_id, :quantity)"""),
-                                                [{"cart_id":cart_id,"quantity":quantity,"shoe_id":shoe_id}])
+                                                [{"cart_id":cart_id,"quantity": cart_quantity.quantity,"shoe_id":shoe_id}])
     except Exception as error:
         return(f"Error returned: <<<{error}>>>")
 
