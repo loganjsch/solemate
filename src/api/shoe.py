@@ -199,12 +199,16 @@ def compare_shoes(shoe_id_1: int, shoe_id_2: int):
         if shoe2 is None:
             raise HTTPException(status_code=404, detail=f"Shoe with ID {shoe_id_2} not found")
 
+         # Extract average ratings and handle None values
+        avg_rating_1 = round(shoe1.avg_rating, 2) if shoe1.avg_rating is not None else "N/A"
+        avg_rating_2 = round(shoe2.avg_rating, 2) if shoe2.avg_rating is not None else "N/A"
+
         response = {
             "shoe_ids":[shoe1.shoe_id, shoe2.shoe_id],
             "shoe_names": [shoe1.name, shoe2.name],
             "brands":[shoe1.brand, shoe2.brand],
             "retail_prices":[shoe1.price, shoe2.price],
-            "ratings":[round(shoe1.avg_rating,2), round(shoe2.avg_rating,2)]
+            "ratings":[avg_rating_1, avg_rating_2]
         }
 
         return response
