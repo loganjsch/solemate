@@ -27,9 +27,10 @@ class User(BaseModel):
     username: str
     email: str
     password: str
+    address: str
 
 @router.post("/")
-def create_user(name: str, username: str, email: str, password: str,address:str):
+def create_user(user:User):
     """ """
 
     #check if password long enough
@@ -39,7 +40,7 @@ def create_user(name: str, username: str, email: str, password: str,address:str)
     #check for valid email
     regex = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,7}\b'
 
-    if(not re.fullmatch(regex, email)):
+    if(not re.fullmatch(regex, user.email)):
         return("Invalid Email")
 
     #add salt & encrypt password before insertion
@@ -66,7 +67,7 @@ def create_user(name: str, username: str, email: str, password: str,address:str)
                                                 SELECT username FROM users
                                                 WHERE username = :username
                                             """),
-                                            [{"username": username}]).all()
+                                            [{"username": user.username}]).all()
         
         if len(validUser) > 0:
             return "Username Already In Use. Pick Another Username"
@@ -76,7 +77,7 @@ def create_user(name: str, username: str, email: str, password: str,address:str)
                                                 SELECT email FROM users
                                                 WHERE email = :email
                                             """),
-                                            [{"email": email}]).all()
+                                            [{"email": user.email}]).all()
         
         if len(validEmail) > 0:
             return "Email Already In Use. Use Another Email"
@@ -88,7 +89,7 @@ def create_user(name: str, username: str, email: str, password: str,address:str)
                                                 VALUES (:name, :username, :email, :password,:salt,:address),
                                                 RETURNING id
                                             """),
-                                            [{"name": name, "username": username, "email": email, "password": password,"salt":salt,"address":address}]).scalar_one()
+                                            [{"name": user.name, "username": user.username, "email": user.email, "password": user.password,"salt":salt,"address":user.address}]).scalar_one()
         except Exception:
             print("Couldn't Create Account")
             
