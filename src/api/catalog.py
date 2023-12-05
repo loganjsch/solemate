@@ -20,7 +20,7 @@ def get_shoe_catalog():
                                                      FROM shoes 
                                                      LEFT JOIN reviews ON shoes.shoe_id = reviews.shoe_id
                                                      GROUP BY shoes.shoe_id
-                                                     ORDER BY brand
+                                                     ORDER BY RANDOM()
                                                      LIMIT 10"""))
     ret = []
     for shoe in catalog:
@@ -137,7 +137,7 @@ def search_shoes(
                     "brand": row.brand,
                     "price": row.price,
                     "color":row.color,
-                    "rating": row.avg,
+                    "rating": round(row.avg,2),
                 }
             )
 
