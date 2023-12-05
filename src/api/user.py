@@ -4,7 +4,7 @@ import dotenv
 from cryptography.fernet import Fernet
 from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel
 from src.api import auth
 import sqlalchemy
@@ -31,6 +31,12 @@ class User(BaseModel):
 @router.post("/")
 def create_user(user:User):
     """ """
+
+    if len(user.name) < 1:
+        return "Name cannot be empty."
+
+    if len(user.password) < 4:
+        return "Username must be at least 4 characters."
 
     #check if password long enough
     if len(user.password) < 8:
@@ -148,16 +154,20 @@ def logout(user_id:int):
                                         [{"user_id": user_id}]).scalar_one()
         
         if response != True:
-            return "Cannot Logout"
+            return "Cannot Logout. You are not logged in."
         
-        connection.execute(sqlalchemy.text("""
-                                            UPDATE users
-                                            SET is_logged_in = FALSE
-                                            WHERE user_id = :user_id
-                                           """),
-                                        [{"user_id": user_id}])
+        try:
+            # Update the user's login status if the user exists
+            connection.execute(sqlalchemy.text("""
+                UPDATE users
+                SET is_logged_in = FALSE
+                WHERE user_id = :user_id
+            """), {"user_id": user_id})
+        except Exception as e:
+            # Log the exception or handle it based on your requirements
+            raise HTTPException(status_code=404, detail="Error. Double check if user exists.")
 
-        return "Logged Out"
+    return "Logged Out"
         
 @router.post("/{user_id}/delete")
 def delete(user_id: str):
