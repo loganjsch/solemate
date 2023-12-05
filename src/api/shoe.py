@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel
 from src.api import auth
 import sqlalchemy
@@ -47,7 +47,12 @@ def get_shoe(shoe_id: int):
                                                 GROUP BY shoes.shoe_id
                                                 """), 
                                                 [{"shoe_id": shoe_id}]).first()
-        
+
+      # Check if the shoe with the specified ID exists
+    # Check if the shoe with the specified ID exists
+    if shoe is None:
+        raise HTTPException(status_code=404, detail="Shoe not found")
+
     return {
         "shoe_id": shoe.shoe_id,
         "name": shoe.name,
@@ -141,7 +146,7 @@ def post_shoe_review(review:Rating):
 
     return "Points Earned: " + str(point_change)
 
-@router.post("/{shoe_id}/reviews/{rating_id}")
+@router.post("/reviews/{rating_id}")
 def delete_shoe_review(rating_id: int):
     with db.engine.begin() as connection:
         review = connection.execute(sqlalchemy.text("""
@@ -186,6 +191,13 @@ def compare_shoes(shoe_id_1: int, shoe_id_2: int):
             WHERE s.shoe_id = :shoe_id_2
             GROUP BY s.shoe_id, s.name, s.brand, s.price
         """), {"shoe_id_2": shoe_id_2}).fetchone()
+
+        # Check if either shoe_id does not exist
+        if shoe1 is None:
+            raise HTTPException(status_code=404, detail=f"Shoe with ID {shoe_id_1} not found")
+        
+        if shoe2 is None:
+            raise HTTPException(status_code=404, detail=f"Shoe with ID {shoe_id_2} not found")
 
         response = {
             "shoe_ids":[shoe1.shoe_id, shoe2.shoe_id],
