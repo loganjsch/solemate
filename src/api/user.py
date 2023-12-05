@@ -83,7 +83,7 @@ def create_user(user:User):
 
         #insert user info into users table
         try:
-            user_id = connection.execute(sqlalchemy.text("""
+            connection.execute(sqlalchemy.text("""
                                                 INSERT INTO users (name, username, email, password,salt,address) 
                                                 VALUES (:name, :username, :email, :password,:salt,:address),
                                                 RETURNING id
@@ -92,7 +92,7 @@ def create_user(user:User):
         except Exception:
             print("Couldn't Create Account")
             
-    return "Account" + user_id + " Successfully Created. Please Login to Continue."
+    return "Account Successfully Created. Please Login to Continue."
 
 @router.post("/login")
 def login(username: str, password: str):
