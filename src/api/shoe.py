@@ -68,6 +68,17 @@ def get_shoe(shoe_id: int):
 @router.get("/{shoe_id}/reviews")
 def get_shoe_reviews(shoe_id: int):
     """ """
+    # Check if the shoe exists
+    shoe_exists = connection.execute(sqlalchemy.text(
+        """
+        SELECT COUNT(*) 
+        FROM shoes 
+        WHERE shoe_id = :shoe_id
+        """), {"shoe_id": shoe_id}).scalar_one()
+
+    if shoe_exists == 0:
+        raise HTTPException(status_code=404, detail=f"Shoe with ID {shoe_id} not found")
+
     reviews = []
     with db.engine.begin() as connection:
         review_list = connection.execute(sqlalchemy.text(
@@ -119,6 +130,15 @@ def post_shoe_review(review:Rating):
         #check for valid comment
         if len(review.comment) > 500:
             return "Comment Cannoct Exceed 500 Characters"
+
+        # Check if the user has already reviewed this shoe
+        existing_review = connection.execute(sqlalchemy.text("""
+            SELECT * FROM reviews
+            WHERE user_id = :user_id AND shoe_id = :shoe_id
+        """), {"user_id": review.user_id, "shoe_id": review.shoe_id}).fetchone()
+
+        if existing_review:
+            raise HTTPException(status_code=400, detail="User has already reviewed this shoe")
         
         #check how many points were earned in last 24 hours
         points24 = connection.execute(sqlalchemy.text("""
