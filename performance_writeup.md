@@ -29,18 +29,24 @@ Execution Time: 4.156 ms
 ## POST /users/login
 
 ## POST /users/{user_id}/logout
+Execution Time: 0.213 ms
 
 ## POST /users/{user_id}/delete
+Execution Time: 0.143 ms
 
 ## POST /users/{user_id}/shoes/{shoe_id}
+Execution Time: 0.336 ms
 
 ## GET /users/{user_id}/reviews
+Execution Time: 13.893 ms
 
 ## GET /users/{user_id}/shoes
+Execution Time: 23.106 ms
 
 ## GET /users/{user_id}/orders
 
 ## GET /users/{user_id}/points
+Execution Time: 22.430 ms
 
 ## POST /brands/
 
@@ -51,12 +57,15 @@ Execution Time: 4.156 ms
 ## POST /brands/{brand_id}/logout
 
 ## GET /raffles/
+Execution Time: 0.336 ms
 
 ## POST /raffles/{raffle_id}/{user_id}
 
 ## GET /prizes/
+Execution Time: 4.360 ms
 
 ## POST /prizes/carts/{user_id}
+Execution Time: 0.419 ms
 
 ## POST /prizes/carts/{cart_id}/{shoe_id}
 
