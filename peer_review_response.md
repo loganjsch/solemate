@@ -47,3 +47,31 @@ Define specifications for a user's username, and implement a check within the cr
  - the UI will interperet this all
 - shoe relationship would be defined as many to many, a user likes multiples shoes and multiples users can like a shoe.
 - shoes_to_users is a necessary join table because users can have many shoes
+
+# Ritvik Durgempudi
+## Code Review Comments
+### Response:
+- Removed audit.py
+- demo key removed from auth.py
+- removed carts.py 
+- added pagination for catalog, changed to order by brand
+- user password is now hashed
+- user email is now hashed
+- brand password is now hashed
+- we initially made the classes just to help us visualize what parameters we would need, but this is a good suggestion. I converted post_shoe to take in the class shoe. However, i did remove the ShoeCompany class since no endpoint took in all elements of class ShoeCompany as parameters.
+- also removed shoe and user classes from shoe.py, and converted post_shoe_review to use 
+- removed fetchone from sqlalchemy call
+- updated return statement to return a dictionary containing separate fields for success message and userid
+- the compare shoes function just returns the attributes of the two shoes being compared. we kept this simple, similar to how the apple website's compare feature doesn't have any specific comparators, just lists all possible data on a product so people can decide what better fits their needs
+## Schema/API Design Comments
+### Response: 
+- added deletion for shoes and reviews on user profile
+- added deletion for user profile
+- added created_at field for timestamps in tables
+- we didnt add a foreign key relation in the case a brand deletes their account. the shoe still exists on the app and in the real world, so users should be able to add shoes from a brand that may have taken themselves off the app
+- password is now stored as a hash
+- shoe_id is now set up as foreign key reference
+- TODO: will move tags to its own table
+- endpoints for brands in apispec have been added
+- we didn't intend on our app being related to the shoe retail industry at all. it's mostly just an app for shoe enthusiasts to show off their collections. think goodreads before amazon acquired them.
+- type and tags are different, as type is more of the use case of a shoe (basketball, running, etc.) while tags would be the "personality" of the shoe (bold, minimal, etc.)
