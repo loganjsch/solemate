@@ -54,8 +54,11 @@ def create_cart(user_id: int):
     
     return {"cart_id": id}
 
+class CartQuantity(BaseModel):
+    quantity: int
+
 @router.post("/carts/{cart_id}/{shoe_id}")
-def set_item_quantity(cart_id: int, shoe_id:int,quantity:int):
+def set_item_quantity(cart_id: int, shoe_id:int, cart_quantity: CartQuantity):
     """ """
     try:
         with db.engine.begin() as connection:
