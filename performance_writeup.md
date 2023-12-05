@@ -27,6 +27,7 @@ Execution Time: 4.156 ms
 ## POST /users/
 
 ## POST /users/login
+Execution Time: 0.073 ms
 
 ## POST /users/{user_id}/logout
 Execution Time: 0.213 ms
@@ -44,6 +45,7 @@ Execution Time: 13.893 ms
 Execution Time: 23.106 ms
 
 ## GET /users/{user_id}/orders
+Execution Time: 0.186 ms
 
 ## GET /users/{user_id}/points
 Execution Time: 22.430 ms
@@ -51,8 +53,10 @@ Execution Time: 22.430 ms
 ## POST /brands/
 
 ## POST /brands/{brand_id}/shoes
+Planning Time: 0.136 ms
 
 ## POST /brands/login
+Execution Time: 0.051 ms
 
 ## POST /brands/{brand_id}/logout
 
