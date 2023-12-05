@@ -151,7 +151,7 @@ def delete_shoe_review(rating_id: int):
     with db.engine.begin() as connection:
         review = connection.execute(sqlalchemy.text("""
             SELECT user_id, comment FROM reviews
-            WHERE id = :rating_id
+            WHERE rating_id = :rating_id
         """), {"rating_id": rating_id}).fetchone()
 
         if not review:
@@ -166,7 +166,7 @@ def delete_shoe_review(rating_id: int):
 
         connection.execute(sqlalchemy.text("""
             DELETE FROM reviews
-            WHERE id = :rating_id
+            WHERE rating_id = :rating_id
         """), {"rating_id": rating_id})
 
         return "Review and points deleted successfully"
