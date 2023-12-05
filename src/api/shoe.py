@@ -68,19 +68,20 @@ def get_shoe(shoe_id: int):
 @router.get("/{shoe_id}/reviews")
 def get_shoe_reviews(shoe_id: int):
     """ """
-    # Check if the shoe exists
-    shoe_exists = connection.execute(sqlalchemy.text(
-        """
-        SELECT COUNT(*) 
-        FROM shoes 
-        WHERE shoe_id = :shoe_id
-        """), {"shoe_id": shoe_id}).scalar_one()
-
-    if shoe_exists == 0:
-        raise HTTPException(status_code=404, detail=f"Shoe with ID {shoe_id} not found")
-
-    reviews = []
     with db.engine.begin() as connection:
+    # Check if the shoe exists
+        shoe_exists = connection.execute(sqlalchemy.text(
+            """
+            SELECT COUNT(*) 
+            FROM shoes 
+            WHERE shoe_id = :shoe_id
+            """), {"shoe_id": shoe_id}).scalar_one()
+
+        if shoe_exists == 0:
+            raise HTTPException(status_code=404, detail=f"Shoe with ID {shoe_id} not found")
+
+        reviews = []
+
         review_list = connection.execute(sqlalchemy.text(
                                                 """
                                                 SELECT * 
