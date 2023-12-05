@@ -84,7 +84,7 @@ def create_user(user:User):
         #insert user info into users table
         userid = connection.execute(sqlalchemy.text("""
                                             INSERT INTO users (name, username, email, password,salt,address) 
-                                            VALUES (:name, :username, :email, :password,:salt,:address),
+                                            VALUES (:name, :username, :email, :password,:salt,:address)
                                             RETURNING id
                                         """),
                                         [{"name": user.name, "username": user.username, "email": user.email, "password": user.password,"salt":salt,"address":user.address}]).scalar_one()
