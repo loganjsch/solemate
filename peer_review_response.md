@@ -54,7 +54,7 @@ Define specifications for a user's username, and implement a check within the cr
 - Removed audit.py
 - demo key removed from auth.py
 - removed carts.py 
-- added pagination for catalog, changed to order by brand
+- catalog is supposed to return a random 10 shoes for the homepage of the website, it is intentionally supposed to be 10 random with no pagination
 - user password is now hashed
 - user email is now hashed
 - brand password is now hashed
