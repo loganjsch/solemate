@@ -82,15 +82,14 @@ def create_user(user:User):
             return "Email Already In Use. Use Another Email"
 
         #insert user info into users table
-        try:
-            userid = connection.execute(sqlalchemy.text("""
-                                                INSERT INTO users (name, username, email, password,salt,address) 
-                                                VALUES (:name, :username, :email, :password,:salt,:address),
-                                                RETURNING id
-                                            """),
-                                            [{"name": user.name, "username": user.username, "email": user.email, "password": user.password,"salt":salt,"address":user.address}]).scalar_one()
-        except Exception:
-            print("Couldn't Create Account")
+        userid = connection.execute(sqlalchemy.text("""
+                                            INSERT INTO users (name, username, email, password,salt,address) 
+                                            VALUES (:name, :username, :email, :password,:salt,:address),
+                                            RETURNING id
+                                        """),
+                                        [{"name": user.name, "username": user.username, "email": user.email, "password": user.password,"salt":salt,"address":user.address}]).scalar_one()
+        if userid is None:
+            return "Unable to create user."
             
     return {"message": "Account Successfully Created. Please Login to Continue.", "user_id": userid}
 
