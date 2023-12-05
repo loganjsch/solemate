@@ -110,10 +110,42 @@ Execution Time: 112.172 ms
 
 ### POST /shoes/{shoe_id}/reviews/{rating_id}
 ```
-
+Gather  (cost=1000.00..12637.63 rows=1 width=259) (actual time=0.387..28.669 rows=1 loops=1)
+  Workers Planned: 2
+  Workers Launched: 2
+  ->  Parallel Seq Scan on reviews  (cost=0.00..11637.53 rows=1 width=259) (actual time=13.667..22.792 rows=0 loops=3)
+        Filter: (rating_id = 38)
+        Rows Removed by Filter: 86816
+Planning Time: 0.098 ms
+Execution Time: 28.691 ms
+-----------------------------
+Delete on reviews  (cost=0.00..13536.67 rows=0 width=0) (actual time=42.800..42.800 rows=0 loops=1)
+  ->  Seq Scan on reviews  (cost=0.00..13536.67 rows=1 width=6) (actual time=42.798..42.799 rows=0 loops=1)
+        Filter: (rating_id = 324)
+        Rows Removed by Filter: 260449
+Planning Time: 0.198 ms
+Execution Time: 42.841 ms
 ```
 
 ### POST /shoes/{shoe_id}/reviews/{user_id}
 ```
+Gather  (cost=1000.00..5940.26 rows=1 width=16) (actual time=21.890..23.441 rows=0 loops=1)
+  Workers Planned: 1
+  Workers Launched: 1
+  ->  Parallel Seq Scan on shoes_to_users  (cost=0.00..4940.16 rows=1 width=16) (actual time=17.991..17.991 rows=0 loops=2)
+        Filter: ((user_id = 983) AND (shoe_id = 32))
+        Rows Removed by Filter: 173580
+Planning Time: 0.106 ms
+Execution Time: 23.460 ms
+-----------------------------
+Aggregate  (cost=7108.71..7108.72 rows=1 width=32) (actual time=23.905..24.585 rows=1 loops=1)
+  ->  Gather  (cost=1000.00..7108.71 rows=1 width=8) (actual time=23.901..24.581 rows=0 loops=1)
+        Workers Planned: 1
+        Workers Launched: 1
+        ->  Parallel Seq Scan on point_ledger  (cost=0.00..6108.61 rows=1 width=8) (actual time=19.979..19.979 rows=0 loops=2)
+"              Filter: ((point_change > 0) AND (user_id = 2334) AND (created_at >= (now() - '1 day'::interval)))"
+              Rows Removed by Filter: 148340
+Planning Time: 0.177 ms
+Execution Time: 24.615 ms
 ```
 
