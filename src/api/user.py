@@ -34,7 +34,7 @@ def create_user(user:User):
     """ """
 
     #check if password long enough
-    if len(password) < 8:
+    if len(user.password) < 8:
         return "Password must be atleast 8 characters"
 
     #check for valid email
@@ -59,7 +59,7 @@ def create_user(user:User):
     key = base64.urlsafe_b64encode(kdf.derive(crypto_key))
     f = Fernet(key)
 
-    password = f.encrypt(bytes(password,'utf-8'))
+    user.password = f.encrypt(bytes(user.password,'utf-8'))
 
     with db.engine.begin() as connection:
         #check if username already in use
@@ -84,7 +84,7 @@ def create_user(user:User):
 
         #insert user info into users table
         try:
-            userid = connection.execute(sqlalchemy.text("""
+            user.user_id = connection.execute(sqlalchemy.text("""
                                                 INSERT INTO users (name, username, email, password,salt,address) 
                                                 VALUES (:name, :username, :email, :password,:salt,:address),
                                                 RETURNING id
@@ -93,7 +93,7 @@ def create_user(user:User):
         except Exception:
             print("Couldn't Create Account")
             
-    return "Account" + userid + " Successfully Created. Please Login to Continue."
+    return "Account" + user.user_id + " Successfully Created. Please Login to Continue."
 
 @router.post("/login")
 def login(username: str, password: str):
