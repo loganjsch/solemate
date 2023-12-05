@@ -89,6 +89,31 @@ Execution Time: 24.439 ms
 
 
 # Performance tuning
+### GET /shoes
+```
+Limit  (cost=15719.89..15719.91 rows=10 width=70) (actual time=111.804..111.805 rows=10 loops=1)
+  ->  Sort  (cost=15719.89..15744.89 rows=10000 width=70) (actual time=111.802..111.804 rows=10 loops=1)
+        Sort Key: (random())
+        Sort Method: top-N heapsort  Memory: 26kB
+        ->  HashAggregate  (cost=15353.79..15503.79 rows=10000 width=70) (actual time=109.131..110.759 rows=10003 loops=1)
+              Group Key: shoes.shoe_id
+              Batches: 1  Memory Usage: 2193kB
+              ->  Hash Right Join  (cost=482.00..14051.52 rows=260454 width=34) (actual time=9.650..81.063 rows=260453 loops=1)
+                    Hash Cond: (reviews.shoe_id = shoes.shoe_id)
+                    ->  Seq Scan on reviews  (cost=0.00..12885.54 rows=260454 width=12) (actual time=0.059..37.071 rows=260450 loops=1)
+                    ->  Hash  (cost=357.00..357.00 rows=10000 width=30) (actual time=9.481..9.481 rows=10003 loops=1)
+                          Buckets: 16384  Batches: 1  Memory Usage: 740kB
+                          ->  Seq Scan on shoes  (cost=0.00..357.00 rows=10000 width=30) (actual time=0.034..4.805 rows=10003 loops=1)
+Planning Time: 0.774 ms
+Execution Time: 112.172 ms
+```
 
+### POST /shoes/{shoe_id}/reviews/{rating_id}
+```
 
+```
+
+### POST /shoes/{shoe_id}/reviews/{user_id}
+```
+```
 
