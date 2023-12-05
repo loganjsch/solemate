@@ -137,7 +137,7 @@ def post_shoe_review(review:Rating):
                                            INSERT INTO reviews (shoe_id, user_id, rating, comment) 
                                            VALUES (:shoe_id, :user_id, :rating, :comment)
                                            """),
-                                        [{"shoe_id": review.shoe_id, "user_id": review.user_id, "rating": review, "comment": review.comment}])
+                                        [{"shoe_id": review.shoe_id, "user_id": review.user_id, "rating": review.rating, "comment": review.comment}])
 
     return "Points Earned: " + str(point_change)
 
