@@ -71,7 +71,7 @@ Define specifications for a user's username, and implement a check within the cr
 - we didnt add a foreign key relation in the case a brand deletes their account. the shoe still exists on the app and in the real world, so users should be able to add shoes from a brand that may have taken themselves off the app
 - password is now stored as a hash
 - shoe_id is now set up as foreign key reference
-- TODO: will move tags to its own table
+- added tags table to allow up to 3 tags which has a foreign key reference to shoes table
 - endpoints for brands in apispec have been added
 - we didn't intend on our app being related to the shoe retail industry at all. it's mostly just an app for shoe enthusiasts to show off their collections. think goodreads before amazon acquired them.
 - type and tags are different, as type is more of the use case of a shoe (basketball, running, etc.) while tags would be the "personality" of the shoe (bold, minimal, etc.)
