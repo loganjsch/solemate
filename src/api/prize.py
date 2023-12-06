@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel
 from src.api import auth
 import sqlalchemy
@@ -45,13 +45,18 @@ def get_prizes():
 @router.post("/carts/{user_id}")
 def create_cart(user_id: int):
     """ """
+    if user_id < 0:
+        raise HTTPException(status_code=400, detail="Invalid user id")
+    
     with db.engine.begin() as connection:
         id = connection.execute(sqlalchemy.text("""INSERT INTO prize_carts (user_id)
                                             VALUES (:user_id)
                                             RETURNING cart_id"""),
                                             [{"user_id":user_id}]).scalar_one()
 
-    
+    if id is None:
+        raise HTTPException(status_code=404, detail="User ID not found. Can't create cart for user.")
+
     return {"cart_id": id}
 
 class CartQuantity(BaseModel):
