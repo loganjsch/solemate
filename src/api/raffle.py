@@ -55,7 +55,7 @@ def enter_raffle(user_id:int,entries:int,raffle_id:int):
                                             FROM users
                                             WHERE user_id = :user_id
                                         """),
-                                        [{"user_id": user_id}]).scalar_one()
+                                        [{"user_id": user_id}])
         
         if response != True:
             raise HTTPException(status_code=401, detail="Login required to access this feature")
