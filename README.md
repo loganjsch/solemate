@@ -15,6 +15,7 @@ rbathula@calpoly.edu
 Ian McCurry
 imccurry@calpoly.edu
 
+
 We are developing the backend API of a revolutionary new service to ensure that you are wearing the perfect shoes for your feet.
 
 Users of this new service can input a variety of parameters such as foot dimensions, cushion preferences, brand preferences, price range, previously liked shoes, etc.
