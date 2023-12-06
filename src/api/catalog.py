@@ -17,7 +17,7 @@ def get_shoe_catalog():
     """ """
     with db.engine.begin() as connection:
         catalog = connection.execute(sqlalchemy.text
-        ("""SELECT shoes.shoe_id,name,brand,AVG(rating) as avg
+        ("""SELECT shoes.shoe_id,name,brand,ROUND(AVG(rating),2) as avg
             FROM shoes 
             LEFT JOIN reviews ON shoes.shoe_id = reviews.shoe_id
             GROUP BY shoes.shoe_id
