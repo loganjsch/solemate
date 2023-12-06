@@ -110,7 +110,6 @@ def checkout(cart_id: int):
                                                 [{"cart_id":cart_id}]).scalar_one()
 
             if active is False:
-                raise HTTPException(status_code=400, detail="ERROR: Cart has already checked out")
                 raise Exception("Error: Cart has already checked out")
 
             user_id  = connection.execute(sqlalchemy.text("""
