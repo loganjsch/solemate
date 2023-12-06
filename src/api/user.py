@@ -4,7 +4,7 @@ import dotenv
 from cryptography.fernet import Fernet
 from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel
 from src.api import auth
 import sqlalchemy
@@ -31,6 +31,12 @@ class User(BaseModel):
 @router.post("/")
 def create_user(user:User):
     """ """
+
+    if len(user.name) < 1:
+        return "Name cannot be empty."
+
+    if len(user.password) < 4:
+        return "Username must be at least 4 characters."
 
     #check if password long enough
     if len(user.password) < 8:
@@ -82,15 +88,14 @@ def create_user(user:User):
             return "Email Already In Use. Use Another Email"
 
         #insert user info into users table
-        try:
-            userid = connection.execute(sqlalchemy.text("""
-                                                INSERT INTO users (name, username, email, password,salt,address) 
-                                                VALUES (:name, :username, :email, :password,:salt,:address),
-                                                RETURNING id
-                                            """),
-                                            [{"name": user.name, "username": user.username, "email": user.email, "password": user.password,"salt":salt,"address":user.address}]).scalar_one()
-        except Exception:
-            print("Couldn't Create Account")
+        userid = connection.execute(sqlalchemy.text("""
+                                            INSERT INTO users (name, username, email, password,salt,address) 
+                                            VALUES (:name, :username, :email, :password,:salt,:address)
+                                            RETURNING user_id
+                                        """),
+                                        [{"name": user.name, "username": user.username, "email": user.email, "password": user.password,"salt":salt,"address":user.address}]).scalar_one()
+        if userid is None:
+            return "Unable to create user."
             
     return {"message": "Account Successfully Created. Please Login to Continue.", "user_id": userid}
 
@@ -141,6 +146,17 @@ def login(username: str, password: str):
 @router.post("/{user_id}/logout")
 def logout(user_id:int):
     with db.engine.begin() as connection:
+        
+        # Check if the user exists
+        user_exists = connection.execute(sqlalchemy.text("""
+            SELECT COUNT(*) 
+            FROM users
+            WHERE user_id = :user_id
+        """), {"user_id": user_id}).scalar_one()
+
+        if user_exists == 0:
+            raise HTTPException(status_code=404, detail=f"User with ID {user_id} not found")
+
         response = connection.execute(sqlalchemy.text("""
                                             SELECT is_logged_in
                                             FROM users
@@ -149,7 +165,7 @@ def logout(user_id:int):
                                         [{"user_id": user_id}]).scalar_one()
         
         if response != True:
-            return "Cannot Logout"
+            return "Cannot Logout."
         
         connection.execute(sqlalchemy.text("""
                                             UPDATE users
@@ -183,16 +199,29 @@ def delete(user_id: str):
 @router.post("/{user_id}/shoes/{shoe_id}")
 def add_shoe_to_Collection(shoe_id: int, user_id: int):
     with db.engine.begin() as connection:
-        response = connection.execute(sqlalchemy.text("""
+
+        # Check if both user and shoe exist
+        user_and_shoe_exist = connection.execute(sqlalchemy.text("""
+            SELECT 
+                (SELECT COUNT(*) FROM users WHERE user_id = :user_id) AS user_count,
+                (SELECT COUNT(*) FROM shoes WHERE shoe_id = :shoe_id) AS shoe_count
+        """), {"user_id": user_id, "shoe_id": shoe_id}).first()
+
+        if user_and_shoe_exist.user_count == 0:
+            raise HTTPException(status_code=404, detail=f"User with ID {user_id} not found")
+
+        if user_and_shoe_exist.shoe_count == 0:
+            raise HTTPException(status_code=404, detail=f"Shoe with ID {shoe_id} not found")
+
+        is_logged_in = connection.execute(sqlalchemy.text("""
                                             SELECT is_logged_in
                                             FROM users
                                             WHERE user_id = :user_id
                                            """),
                                         [{"user_id": user_id}]).scalar_one()
         
-        if response != True:
+        if is_logged_in != True:
             return "Login to Access this feature"
-
 
         connection.execute(sqlalchemy.text("""
                                            INSERT INTO shoes_to_users (shoe_id, user_id) 
@@ -204,6 +233,16 @@ def add_shoe_to_Collection(shoe_id: int, user_id: int):
 @router.get("/{user_id}/reviews")
 def get_user_reviews(user_id: int):
     with db.engine.begin() as connection:
+        # Check if the user exists
+        user_exists = connection.execute(sqlalchemy.text("""
+            SELECT COUNT(*) 
+            FROM users
+            WHERE user_id = :user_id
+        """), {"user_id": user_id}).scalar_one()
+
+        if user_exists == 0:
+            raise HTTPException(status_code=404, detail=f"User with ID {user_id} not found")
+
         reviews = connection.execute(sqlalchemy.text("""
                                                     SELECT shoe.name, rating, comment FROM reviews AS rating
                                                     JOIN shoes AS shoe ON shoe.shoe_id = rating.shoe_id
@@ -226,6 +265,16 @@ def get_user_reviews(user_id: int):
 def get_user_collection(user_id: int):
     """ """
     with db.engine.begin() as connection:
+        # Check if the user exists
+        user_exists = connection.execute(sqlalchemy.text("""
+            SELECT COUNT(*) 
+            FROM users
+            WHERE user_id = :user_id
+        """), {"user_id": user_id}).scalar_one()
+
+        if user_exists == 0:
+            raise HTTPException(status_code=404, detail=f"User with ID {user_id} not found")
+
         collection = connection.execute(sqlalchemy.text(
                                                     """
                                                     SELECT shoes.shoe_id, name, brand, color, material, price FROM shoes
@@ -319,6 +368,16 @@ def get_orders(user_id: int):
     """ """
     with db.engine.begin() as connection:
 
+        # Check if the user exists
+        user_exists = connection.execute(sqlalchemy.text("""
+            SELECT COUNT(*) 
+            FROM users
+            WHERE user_id = :user_id
+        """), {"user_id": user_id}).scalar_one()
+
+        if user_exists == 0:
+            raise HTTPException(status_code=404, detail=f"User with ID {user_id} not found")
+
         ###Authentication
         response = connection.execute(sqlalchemy.text("""
                                             SELECT is_logged_in
@@ -359,6 +418,16 @@ def get_points(user_id: int):
     """Retrieve total points for a user"""
     
     with db.engine.begin() as connection:
+
+        # Check if the user exists
+        user_exists = connection.execute(sqlalchemy.text("""
+            SELECT COUNT(*) 
+            FROM users
+            WHERE user_id = :user_id
+        """), {"user_id": user_id}).scalar_one()
+
+        if user_exists == 0:
+            raise HTTPException(status_code=404, detail=f"User with ID {user_id} not found")
 
         ###Authentication
         response = connection.execute(sqlalchemy.text("""

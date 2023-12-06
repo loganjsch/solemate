@@ -4,7 +4,7 @@ uvicorn==0.20.0
 sqlalchemy==2.0.7
 cryptography == 41.0.5
 psycopg2-binary~=2.9.3
-python-dotenv
-Faker
-numpy
-pre-commit
+python-dotenv == 1.0.0
+Faker == 20.1.0
+numpy == 1.26.2
+pre-commit == 3.5.0
