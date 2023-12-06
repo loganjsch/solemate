@@ -79,15 +79,12 @@ def set_item_quantity(cart_id: int, shoe_id:int, cart_quantity: CartQuantity):
                                                 WHERE prizes.shoe_id  = :shoe_id AND prizes.quantity > 0
                                             """),[{"shoe_id":shoe_id}]).first()
             if not prizes:
-                raise HTTPException(status_code=400, detail="ERROR: Invalid shoe_id")
                 raise Exception ("ERROR: Invalid shoe_id")
             
             if prizes.quantity < cart_quantity.quantity:
-                raise HTTPException(status_code=400, detail="ERROR: quantity higher than inventory")
                 raise Exception ("ERROR: quantity higher than inventory")
             
             if cart_quantity.quantity < 1:
-                raise HTTPException(status_code=400, detail="ERROR: quantity cannot be less than 1")
                 raise Exception ("ERROR: quantity cannot be less than 1")
 
 
@@ -132,7 +129,6 @@ def checkout(cart_id: int):
                                             [{"user_id": user_id}]).scalar_one()
             
             if response != True:
-                raise HTTPException(status_code=400, detail="ERROR: Login to Access this feature")
                 raise Exception ("Login to Access this feature")
             #####
 
@@ -151,7 +147,6 @@ def checkout(cart_id: int):
                 [{"user_id": user_id}]).scalar_one()
             
             if points_available < total_cost:
-                raise HTTPException(status_code=400, detail="ERROR: not enough points")
                 raise  Exception("ERROR: Not enough points")
             
             total_items = connection.execute(sqlalchemy.text(""" SELECT SUM(quantity)
