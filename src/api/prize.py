@@ -91,7 +91,7 @@ def set_item_quantity(cart_id: int, shoe_id:int, cart_quantity: CartQuantity):
             connection.execute(sqlalchemy.text("""INSERT INTO prize_cart_items (cart_id,shoe_id,quantity)
                                                 VALUES( :cart_id,:shoe_id, :quantity)"""),
                                                 [{"cart_id":cart_id,"quantity": cart_quantity.quantity,"shoe_id":shoe_id}])
-    except HTTPException as error:
+    except Exception as error:
         return(f"Error returned: <<<{error}>>>")
 
     return "OK"
