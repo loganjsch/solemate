@@ -37,7 +37,7 @@ https://github.com/loganjsch/solemate/blob/api-branch/population/populate.py
 
 
 # Performance results of hitting endpoints
-Our 3 slowest endpoints were : GET /shoes, POST /shoes/{shoe_id}/reviews/{rating_id}, POST /shoes/{shoe_id}/reviews/{user_id}
+Our 3 slowest endpoints were : GET /shoes, POST /shoes/{shoe_id}/reviews/{rating_id}, GET /users/search
 
 ### GET /shoes
 Execution Time: 118.076 ms
@@ -51,8 +51,8 @@ Execution Time: 0.827 ms
 ### POST /shoes/{shoe_id}/reviews/{user_id}
 Execution Time: 52.134 ms
 
-### POST /shoes/{shoe_id}/reviews/{rating_id}
-Execution Time: 73.394 ms
+### DELETE /shoes/reviews/delete/{rating_id}
+Execution Time: 8.394 ms
 
 ### GET /shoes/compare/{shoe_id_1}/{shoe_id_2}
 Execution Time: 4.156 ms
@@ -125,61 +125,106 @@ Execution Time: 24.439 ms
 # Performance tuning
 ### GET /shoes
 ```
-Limit  (cost=15719.89..15719.91 rows=10 width=70) (actual time=111.804..111.805 rows=10 loops=1)
-  ->  Sort  (cost=15719.89..15744.89 rows=10000 width=70) (actual time=111.802..111.804 rows=10 loops=1)
+Limit  (cost=15592.12..15592.14 rows=10 width=70) (actual time=94.728..94.730 rows=10 loops=1)
+  ->  Sort  (cost=15592.12..15617.12 rows=10000 width=70) (actual time=94.728..94.729 rows=10 loops=1)
         Sort Key: (random())
         Sort Method: top-N heapsort  Memory: 26kB
-        ->  HashAggregate  (cost=15353.79..15503.79 rows=10000 width=70) (actual time=109.131..110.759 rows=10003 loops=1)
+        ->  HashAggregate  (cost=15226.02..15376.02 rows=10000 width=70) (actual time=92.086..93.712 rows=10000 loops=1)
               Group Key: shoes.shoe_id
               Batches: 1  Memory Usage: 2193kB
-              ->  Hash Right Join  (cost=482.00..14051.52 rows=260454 width=34) (actual time=9.650..81.063 rows=260453 loops=1)
+              ->  Hash Right Join  (cost=481.00..13935.60 rows=258084 width=34) (actual time=6.752..62.942 rows=258083 loops=1)
                     Hash Cond: (reviews.shoe_id = shoes.shoe_id)
-                    ->  Seq Scan on reviews  (cost=0.00..12885.54 rows=260454 width=12) (actual time=0.059..37.071 rows=260450 loops=1)
-                    ->  Hash  (cost=357.00..357.00 rows=10000 width=30) (actual time=9.481..9.481 rows=10003 loops=1)
-                          Buckets: 16384  Batches: 1  Memory Usage: 740kB
-                          ->  Seq Scan on shoes  (cost=0.00..357.00 rows=10000 width=30) (actual time=0.034..4.805 rows=10003 loops=1)
-Planning Time: 0.774 ms
-Execution Time: 112.172 ms
+                    ->  Seq Scan on reviews  (cost=0.00..12776.84 rows=258084 width=12) (actual time=0.008..17.120 rows=258083 loops=1)
+                    ->  Hash  (cost=356.00..356.00 rows=10000 width=30) (actual time=6.684..6.684 rows=10000 loops=1)
+                          Buckets: 16384  Batches: 1  Memory Usage: 739kB
+                          ->  Seq Scan on shoes  (cost=0.00..356.00 rows=10000 width=30) (actual time=0.012..3.128 rows=10000 loops=1)
+Planning Time: 0.186 ms
+Execution Time: 94.838 ms
 ```
+This explain is showing me that our query is going through every row in a seq scan in the group when it ultimately just picks 10 at the end instead of the beginning so it can do the operations with less data.
+We made changes in our query to instead work with a sampling of data and do operations with that instead of all the data.
+```
+Limit  (cost=14759.27..14759.39 rows=10 width=62) (actual time=53.525..53.528 rows=10 loops=1)
+  ->  HashAggregate  (cost=14759.27..14760.52 rows=100 width=62) (actual time=53.524..53.527 rows=10 loops=1)
+        Group Key: shoes.shoe_id
+        Batches: 1  Memory Usage: 24kB
+        ->  Hash Right Join  (cost=14.25..13468.85 rows=258084 width=34) (actual time=0.202..53.288 rows=1004 loops=1)
+              Hash Cond: (reviews.shoe_id = shoes.shoe_id)
+              ->  Seq Scan on reviews  (cost=0.00..12776.84 rows=258084 width=12) (actual time=0.006..23.406 rows=258083 loops=1)
+              ->  Hash  (cost=13.00..13.00 rows=100 width=30) (actual time=0.056..0.056 rows=39 loops=1)
+                    Buckets: 1024  Batches: 1  Memory Usage: 11kB
+                    ->  Sample Scan on shoes  (cost=0.00..13.00 rows=100 width=30) (actual time=0.017..0.032 rows=39 loops=1)
+"                          Sampling: system ('1'::real)"
+Planning Time: 0.253 ms
+Execution Time: 53.597 ms
+```
+This is an acceptable difference for us since we understand that out /shoes call is querying such a large data set but it is much better now. It isnt as much as we had hoped for but still we are happy with it.
+### GET /users/search
+```
+Limit  (cost=240.35..1442.12 rows=5 width=26) (actual time=11.675..26.201 rows=5 loops=1)
+  ->  Seq Scan on users  (cost=0.00..4086.00 rows=17 width=26) (actual time=10.801..26.197 rows=6 loops=1)
+"        Filter: ((username ~~* 'ian%'::text) OR (name ~~* 'ian%'::text))"
+        Rows Removed by Filter: 11157
+Planning Time: 2.085 ms
+Execution Time: 26.234 ms
+```
+This explain is saying that when we do a search of users we are just doing a seq scan thorugh all users so it takes a long time.
+To fix this we are adding an index on the name column in users with gin to allow us to index while using the ILIKE statement.
 
-### POST /shoes/{shoe_id}/reviews/{rating_id}
+CREATE INDEX tbl_name_gin_trgm_id ON users USING gin (name gin_trgm_ops);
 ```
-Gather  (cost=1000.00..12637.63 rows=1 width=259) (actual time=0.387..28.669 rows=1 loops=1)
-  Workers Planned: 2
-  Workers Launched: 2
-  ->  Parallel Seq Scan on reviews  (cost=0.00..11637.53 rows=1 width=259) (actual time=13.667..22.792 rows=0 loops=3)
-        Filter: (rating_id = 38)
-        Rows Removed by Filter: 86816
-Planning Time: 0.098 ms
-Execution Time: 28.691 ms
------------------------------
-Delete on reviews  (cost=0.00..13536.67 rows=0 width=0) (actual time=42.800..42.800 rows=0 loops=1)
-  ->  Seq Scan on reviews  (cost=0.00..13536.67 rows=1 width=6) (actual time=42.798..42.799 rows=0 loops=1)
-        Filter: (rating_id = 324)
-        Rows Removed by Filter: 260449
-Planning Time: 0.198 ms
-Execution Time: 42.841 ms
+Limit  (cost=77.03..95.94 rows=5 width=26) (actual time=0.185..0.212 rows=5 loops=1)
+  ->  Bitmap Heap Scan on users  (cost=73.25..137.54 rows=17 width=26) (actual time=0.176..0.209 rows=6 loops=1)
+"        Recheck Cond: ((username ~~* 'ian%'::text) OR (name ~~* 'ian%'::text))"
+        Heap Blocks: exact=6
+        ->  BitmapOr  (cost=73.25..73.25 rows=17 width=0) (actual time=0.140..0.141 rows=0 loops=1)
+              ->  Bitmap Index Scan on tbl_col_gin_trgm_id  (cost=0.00..43.01 rows=8 width=0) (actual time=0.043..0.043 rows=6 loops=1)
+"                    Index Cond: (username ~~* 'ian%'::text)"
+              ->  Bitmap Index Scan on tbl_name_gin_trgm_id  (cost=0.00..30.23 rows=8 width=0) (actual time=0.097..0.097 rows=83 loops=1)
+"                    Index Cond: (name ~~* 'ian%'::text)"
+Planning Time: 0.882 ms
+Execution Time: 0.253 ms
 ```
+We agree that this is a much better execution time for our system and exactly what we expected.
 
 ### POST /shoes/{shoe_id}/reviews/{user_id}
 ```
-Gather  (cost=1000.00..5940.26 rows=1 width=16) (actual time=21.890..23.441 rows=0 loops=1)
+Gather  (cost=1000.00..5890.85 rows=1 width=16) (actual time=21.863..23.002 rows=0 loops=1)
   Workers Planned: 1
   Workers Launched: 1
-  ->  Parallel Seq Scan on shoes_to_users  (cost=0.00..4940.16 rows=1 width=16) (actual time=17.991..17.991 rows=0 loops=2)
-        Filter: ((user_id = 983) AND (shoe_id = 32))
-        Rows Removed by Filter: 173580
-Planning Time: 0.106 ms
-Execution Time: 23.460 ms
------------------------------
-Aggregate  (cost=7108.71..7108.72 rows=1 width=32) (actual time=23.905..24.585 rows=1 loops=1)
-  ->  Gather  (cost=1000.00..7108.71 rows=1 width=8) (actual time=23.901..24.581 rows=0 loops=1)
-        Workers Planned: 1
-        Workers Launched: 1
-        ->  Parallel Seq Scan on point_ledger  (cost=0.00..6108.61 rows=1 width=8) (actual time=19.979..19.979 rows=0 loops=2)
-"              Filter: ((point_change > 0) AND (user_id = 2334) AND (created_at >= (now() - '1 day'::interval)))"
-              Rows Removed by Filter: 148340
-Planning Time: 0.177 ms
-Execution Time: 24.615 ms
+  ->  Parallel Seq Scan on shoes_to_users  (cost=0.00..4890.75 rows=1 width=16) (actual time=17.535..17.535 rows=0 loops=2)
+        Filter: ((user_id = 423) AND (shoe_id = 5943))
+        Rows Removed by Filter: 171856
+Planning Time: 0.107 ms
+Execution Time: 23.020 ms
+---------------------------------
+Gather  (cost=1000.00..12809.12 rows=1 width=288) (actual time=30.428..31.212 rows=0 loops=1)
+  Workers Planned: 2
+  Workers Launched: 2
+  ->  Parallel Seq Scan on reviews  (cost=0.00..11809.02 rows=1 width=288) (actual time=22.078..22.078 rows=0 loops=3)
+        Filter: ((user_id = 1234) AND (shoe_id = 432423))
+        Rows Removed by Filter: 86027
+Planning Time: 0.108 ms
+Execution Time: 31.233 ms
 ```
+These two calls are both doing seq scans through data which takes a very long time. So we decided to create an index for user_id in both the shoes_to_users table and the reviews table.
 
+CREATE INDEX shoes_to_users_user_id_index on shoes_to_users (user_id)
+
+CREATE INDEX reviews_user_id_index on reviews (user_id)
+```
+Index Scan using shoes_to_users_col_index on shoes_to_users  (cost=0.42..8.62 rows=1 width=16) (actual time=0.128..0.129 rows=0 loops=1)
+  Index Cond: (user_id = 423)
+  Filter: (shoe_id = 5943)
+  Rows Removed by Filter: 2
+Planning Time: 0.753 ms
+Execution Time: 0.151 ms
+----------------------------------
+Index Scan using reviews_col_index on reviews  (cost=0.42..8.59 rows=1 width=288) (actual time=0.053..0.053 rows=0 loops=1)
+  Index Cond: (user_id = 1234)
+  Filter: (shoe_id = 432423)
+  Rows Removed by Filter: 14
+Planning Time: 0.152 ms
+Execution Time: 0.076 ms
+```
+This is the exact performance improvement we had expected from adding an index to a seq scan.
