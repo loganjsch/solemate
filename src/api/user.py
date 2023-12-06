@@ -176,7 +176,7 @@ def logout(user_id:int):
 
         return "Logged Out"
         
-@router.post("/{user_id}/delete")
+@router.delete("/{user_id}/delete")
 def delete(user_id: str):
     with db.engine.begin() as connection:
         response = connection.execute(sqlalchemy.text("""
