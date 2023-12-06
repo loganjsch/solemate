@@ -168,7 +168,7 @@ with engine.begin() as conn:
     user_id bigint not null,
     rating integer not null,
     comment text null,
-    constraint reviews_pkey primary key (shoe_id, user_id),
+    constraint reviews_pkey primary key (rating_id),
     constraint reviews_shoe_id_fkey foreign key (shoe_id) references shoes (shoe_id) on update cascade on delete cascade,
     constraint reviews_user_id_fkey foreign key (user_id) references users (user_id) on update cascade on delete cascade,
     constraint ratings_comment_check check (
@@ -184,8 +184,7 @@ with engine.begin() as conn:
         and (rating <= 5)
         )
     )
-    ) tablespace pg_default;
-                                    
+    ) tablespace pg_default;    
 
     create table
     public.shoes_to_users (

@@ -171,7 +171,7 @@ def post_shoe_review(review:Rating):
 
     return "Points Earned: " + str(point_change)
 
-@router.post("/reviews/{rating_id}")
+@router.delete("/reviews/delete/{rating_id}")
 def delete_shoe_review(rating_id: int):
     with db.engine.begin() as connection:
         review = connection.execute(sqlalchemy.text("""
