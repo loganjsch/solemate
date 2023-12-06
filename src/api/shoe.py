@@ -42,7 +42,7 @@ def get_shoe(shoe_id: int):
     with db.engine.begin() as connection:
         shoe = connection.execute(sqlalchemy.text(
                                                 """
-                                                SELECT shoes.shoe_id,name,brand,price,color,material,tags,type, AVG(rating) as avg
+                                                SELECT shoes.shoe_id,name,brand,price,color,material,tags,type, ROUND(AVG(rating),2) as avg
                                                 FROM shoes
                                                 LEFT JOIN reviews ON reviews.shoe_id = shoes.shoe_id
                                                 WHERE shoes.shoe_id = :shoe_id
@@ -63,7 +63,7 @@ def get_shoe(shoe_id: int):
         "material": shoe.material,
         "tags": shoe.tags,
         "type": shoe.type,
-        "rating": round(shoe.avg,2)
+        "rating": shoe.avg
         }
 
 @router.get("/{shoe_id}/reviews")
