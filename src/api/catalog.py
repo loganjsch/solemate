@@ -132,6 +132,12 @@ def search_shoes(
         count = conn.execute(counting).scalar_one()
 
         json = []
+
+        if row.avg:
+            avg = round(row.avg,2)
+        else:
+            avg = row.avg
+            
         for row in result:
             json.append(
                 {
@@ -140,7 +146,7 @@ def search_shoes(
                     "brand": row.brand,
                     "price": row.price,
                     "color":row.color,
-                    "rating": round(row.avg,2),
+                    "rating": avg,
                 }
             )
 
