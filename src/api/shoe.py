@@ -114,7 +114,7 @@ def post_shoe_review(shoe_id:int,user_id:int,review:Rating):
                                             FROM users
                                             WHERE user_id = :user_id
                                            """),
-                                        [{"user_id": review.user_id}]).scalar_one()
+                                        [{"user_id": user_id}]).scalar_one()
         
         if not response:
             raise HTTPException(status_code=401, detail="Login to post review")
@@ -123,7 +123,7 @@ def post_shoe_review(shoe_id:int,user_id:int,review:Rating):
         user_shoe = connection.execute(sqlalchemy.text("""
             SELECT * FROM shoes_to_users
             WHERE user_id = :user_id AND shoe_id = :shoe_id
-        """), {"user_id": review.user_id, "shoe_id": review.shoe_id}).fetchone()
+        """), {"user_id": user_id, "shoe_id": shoe_id}).fetchone()
 
         if not user_shoe:
            raise HTTPException(status_code=400, detail="User has not added this shoe to their profile")
@@ -140,7 +140,7 @@ def post_shoe_review(shoe_id:int,user_id:int,review:Rating):
         existing_review = connection.execute(sqlalchemy.text("""
             SELECT * FROM reviews
             WHERE user_id = :user_id AND shoe_id = :shoe_id
-        """), {"user_id": review.user_id, "shoe_id": review.shoe_id}).fetchone()
+        """), {"user_id": user_id, "shoe_id": shoe_id}).fetchone()
 
         if existing_review:
             raise HTTPException(status_code=400, detail="User has already reviewed this shoe")
@@ -152,22 +152,26 @@ def post_shoe_review(shoe_id:int,user_id:int,review:Rating):
                                            WHERE user_id = :user_id AND created_at >= NOW() - '1 day'::INTERVAL AND point_change > 0
                                             
                                            """),
-                                        [{"user_id": review.user_id}]).scalar_one()
+                                        [{"user_id": user_id}]).scalar_one()
         
         #insert points so total for last 24 hours <= 100
         point_change = min(100-points24,len(review.comment)//10)
+
+        if point_change < 0:
+            point_change = 0
+            
         connection.execute(sqlalchemy.text("""
                                            INSERT INTO point_ledger (user_id,point_change) 
                                            VALUES (:user_id,:point_change)
                                            """),
-                                        [{"user_id": review.user_id,"point_change":point_change}])
+                                        [{"user_id": user_id,"point_change":point_change}])
         
         #insert review into reviews
         connection.execute(sqlalchemy.text("""
                                            INSERT INTO reviews (shoe_id, user_id, rating, comment) 
                                            VALUES (:shoe_id, :user_id, :rating, :comment)
                                            """),
-                                        [{"shoe_id": review.shoe_id, "user_id": review.user_id, "rating": review.rating, "comment": review.comment}])
+                                        [{"shoe_id": shoe_id, "user_id": user_id, "rating": review.rating, "comment": review.comment}])
 
     return "Points Earned: " + str(point_change)
 
