@@ -2,6 +2,40 @@
 
 https://github.com/loganjsch/solemate/blob/api-branch/population/populate.py
 
+## Row Breakdown:
+
+total rows: 1069534
+
+brands:13
+shoes: 10000
+users: 85000
+shoes_to_users: 348418
+reviews: 261075
+points: 302328
+orders: 252
+raffle_entries: 61944
+raffles: 156
+prizes: 156
+prize_cart_items: 96
+prize_carts: 96
+
+## Explanations:
+
+- There a very few major shoe companies. The market is dominated by only a few companies, so we would expect a very small amount of brand accounts. Out of one million rows, the amount would be negligible.
+- Shoe companies have lots of shoes but they wouldn't post their super obscure shoes to the site, only the ones they want people to discover and buy. So out of all the brands, we think about 10k different shoes would be posted considering they aren't posting every shoe.
+- About 8.5% of our database would be dedicated to users. This is because each user can have multiple shoes, reviews, raffle entries, and point transactions. Thus those tables would have higher percentages than users, so out of a million rows, users would only take up about 8.5%.
+- The shoes_to_users table is about 4x the size of the users tables because on average each user would have around 4 shoes. This is because some users may never add a shoe to their account, but some users may have lots of shoes. Most people have 2-3 shoes, so we expect it to average out around 4 shoes per user.
+- The reviews table is 3/4 the size of the shoes_to_users table because a user can only review a shoe if they have added that shoe, so the table can't exceed the size of reviews. Users are incentivized to post reviews with points so we expect 3 out of every 4 shoes added by a user will get reviewed.
+- The point table is our largest because it logs tons of transactions for every users. Every review, raffle entry, and prize purchase adds rows to the point table. transactions that purchase multiple raffles tickets at a time are counted as one row in the points table, which is why it's smaller than the rows of reviews and raffles_entries combined.
+- The orders table gets 156 entries from raffle winners because our service start date is 3 years ago, so one winner every week would be 156 winners. The other 96/252 rows are from prizes that were purchased. Prizes costs a lot of point so all 156 prizes wouldn't be purchased yet
+- raffle_entries table is about 1/5 the size of the reviews table. We expect the average review to be about 250 words (because we incentivize character count) and the average raffle ticket costs is around 125 points. This means on average 5 reviews leads to 1 raffle_entry, which is why raffle_entries is 1/5 the size of reviews
+- raffles table gets a new item every weeks, so over 3 years that is 156 items
+- prizes table gets a new item every weeks, so over 3 years that is 156 items
+- prize_cart_items has 96 rows because a prize costs a lot of points, so it is extremely unlikely a person would buy multiple prizes with one cart 
+- prize_carts has 96 rows because 96 prizes out of 156 were purchased, and a cart was created for all those purchases
+
+
+
 # Performance results of hitting endpoints
 Our 3 slowest endpoints were : GET /shoes, POST /shoes/{shoe_id}/reviews/{rating_id}, POST /shoes/{shoe_id}/reviews/{user_id}
 
