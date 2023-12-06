@@ -244,7 +244,7 @@ def get_user_reviews(user_id: int):
             raise HTTPException(status_code=404, detail=f"User with ID {user_id} not found")
 
         reviews = connection.execute(sqlalchemy.text("""
-                                                    SELECT shoe.name, rating, comment FROM reviews AS rating
+                                                    SELECT shoe.name, rating, comment, rating_id FROM reviews AS rating
                                                     JOIN shoes AS shoe ON shoe.shoe_id = rating.shoe_id
                                                     WHERE rating.user_id = :user_id
                                                     """),
@@ -255,7 +255,8 @@ def get_user_reviews(user_id: int):
                     {
                     "shoe_name": review.name,
                     "rating": review.rating,
-                    "comment": review.comment
+                    "comment": review.comment,
+                    "rating_id":review.rating_id
                     }
                     )
     
