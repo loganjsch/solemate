@@ -130,11 +130,11 @@ def post_shoe_review(review:Rating):
         
         #check for valid rating
         if review.rating > 5 or review.rating < 1:
-            return "INVALID RATING (1-5 INCLUSIVE)"
+           raise HTTPException(status_code=400, detail="Invalid Rating: Choose a value between 1-5")
         
         #check for valid comment
         if len(review.comment) > 500:
-            return "Comment Cannoct Exceed 500 Characters"
+           raise HTTPException(status_code=400, detail="Invalid Comment: Exceeds 500 chars")
 
         # Check if the user has already reviewed this shoe
         existing_review = connection.execute(sqlalchemy.text("""
@@ -180,7 +180,8 @@ def delete_shoe_review(rating_id: int):
         """), {"rating_id": rating_id}).fetchone()
 
         if not review:
-            return "Review not found"
+           raise HTTPException(status_code=404, detail="Review not found")
+
 
         points_to_deduct = len(review.comment) // 10
 
@@ -199,7 +200,10 @@ def delete_shoe_review(rating_id: int):
 @router.get("/compare/{shoe_id_1}/{shoe_id_2}")
 def compare_shoes(shoe_id_1: int, shoe_id_2: int):
     """"""
-    #TODO Edge case 1 (Rohit) - Add exceptions for non existent shoe_id
+    #check for negative shoe id 
+    if shoe_id_1 < 0 or shoe_id_2 < 0:
+        raise HTTPException(status_code=404, detail="Shoe id not found")
+
     with db.engine.begin() as connection:
         shoe1 = connection.execute(sqlalchemy.text("""
             SELECT s.shoe_id, s.name, s.brand, s.price, AVG(r.rating) as avg_rating
