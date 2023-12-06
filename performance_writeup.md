@@ -170,6 +170,7 @@ Execution Time: 26.234 ms
 ```
 This explain is saying that when we do a search of users we are just doing a seq scan thorugh all users so it takes a long time.
 To fix this we are adding an index on the name column in users with gin to allow us to index while using the ILIKE statement.
+
 CREATE INDEX tbl_name_gin_trgm_id ON users USING gin (name gin_trgm_ops);
 ```
 Limit  (cost=77.03..95.94 rows=5 width=26) (actual time=0.185..0.212 rows=5 loops=1)
@@ -207,7 +208,9 @@ Planning Time: 0.108 ms
 Execution Time: 31.233 ms
 ```
 These two calls are both doing seq scans through data which takes a very long time. So we decided to create an index for user_id in both the shoes_to_users table and the reviews table.
+
 CREATE INDEX shoes_to_users_user_id_index on shoes_to_users (user_id)
+
 CREATE INDEX reviews_user_id_index on reviews (user_id)
 ```
 Index Scan using shoes_to_users_col_index on shoes_to_users  (cost=0.42..8.62 rows=1 width=16) (actual time=0.128..0.129 rows=0 loops=1)
