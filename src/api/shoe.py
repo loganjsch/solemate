@@ -69,6 +69,8 @@ def get_shoe(shoe_id: int):
 @router.get("/{shoe_id}/reviews")
 def get_shoe_reviews(shoe_id: int):
     """ """
+    if shoe_id < 0:
+        raise HTTPException(status_code=400, detail="Invalid id")
     with db.engine.begin() as connection:
     # Check if the shoe exists
         shoe_exists = connection.execute(sqlalchemy.text(
