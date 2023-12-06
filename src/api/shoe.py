@@ -36,7 +36,9 @@ class Rating(BaseModel):
 @router.get("/{shoe_id}")
 def get_shoe(shoe_id: int):
     """ """
-    ##TODO Edge case 1 (Rohit) - Add exception for non-existent student id
+    if shoe_id < 0:
+        raise HTTPException(status_code=400, detail="Invalid id")
+
     with db.engine.begin() as connection:
         shoe = connection.execute(sqlalchemy.text(
                                                 """
@@ -48,7 +50,6 @@ def get_shoe(shoe_id: int):
                                                 """), 
                                                 [{"shoe_id": shoe_id}]).first()
 
-      # Check if the shoe with the specified ID exists
     # Check if the shoe with the specified ID exists
     if shoe is None:
         raise HTTPException(status_code=404, detail="Shoe not found")
@@ -78,7 +79,7 @@ def get_shoe_reviews(shoe_id: int):
             """), {"shoe_id": shoe_id}).scalar_one()
 
         if shoe_exists == 0:
-            raise HTTPException(status_code=404, detail=f"Shoe with ID {shoe_id} not found")
+            raise HTTPException(status_code=404, detail=f"Shoe not found")
 
         reviews = []
 
@@ -89,6 +90,7 @@ def get_shoe_reviews(shoe_id: int):
                                                 WHERE shoe_id = :shoe_id
                                                 """), 
                                                 [{"shoe_id": shoe_id}])
+    
     for review in review_list:
         reviews.append(
                     {
@@ -97,6 +99,8 @@ def get_shoe_reviews(shoe_id: int):
                     "comment": review.comment
                     }
                     )
+    if not reviews:
+            return {"message": "No reviews found for this shoe"}
     return reviews
 
 @router.post("/{shoe_id}/reviews/{user_id}")
@@ -112,8 +116,8 @@ def post_shoe_review(review:Rating):
                                            """),
                                         [{"user_id": review.user_id}]).scalar_one()
         
-        if response != True:
-            return "Login to Access this feature"
+        if not response:
+            raise HTTPException(status_code=401, detail="Login to post review")
         #####
         #check if user added shoe to profile
         user_shoe = connection.execute(sqlalchemy.text("""
@@ -122,7 +126,7 @@ def post_shoe_review(review:Rating):
         """), {"user_id": review.user_id, "shoe_id": review.shoe_id}).fetchone()
 
         if not user_shoe:
-            return "User has not added this shoe to their profile"
+           raise HTTPException(status_code=400, detail="User has not added this shoe to their profile")
         
         #check for valid rating
         if review.rating > 5 or review.rating < 1:
