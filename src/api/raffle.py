@@ -25,8 +25,23 @@ def get_raffles():
                                             ORDER BY start_time ASC
                                            """))
 
-        ret = [dict(raffle) for raffle in raffles] 
-        return ret if ret else {"message": "No active raffles available"} 
+        ret = []
+
+        for raffle in raffles:
+            ret.append(
+                {   
+                    "raffle_id": raffle.raffle_id,
+                    "shoe_id": raffle.shoe_id,
+                    "shoe_brand":raffle.brand,
+                    "shoe_name":raffle.name,
+                    "start_time":raffle.start_time.ctime(),
+                    "entry_cost":raffle.price
+                }
+            )
+        if not ret:
+            return "No raffles available"
+
+        return ret
     
 @router.post("/{raffle_id}/{user_id}")
 def enter_raffle(user_id:int,entries:int,raffle_id:int):
