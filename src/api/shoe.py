@@ -28,8 +28,6 @@ class Shoe(BaseModel):
     type: str
 
 class Rating(BaseModel):
-    shoe_id: int
-    user_id: int
     rating: int
     comment: str
 
@@ -106,7 +104,7 @@ def get_shoe_reviews(shoe_id: int):
     return reviews
 
 @router.post("/{shoe_id}/reviews/{user_id}")
-def post_shoe_review(review:Rating):
+def post_shoe_review(shoe_id:int,user_id:int,review:Rating):
     """ """
     
     with db.engine.begin() as connection:
