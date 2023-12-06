@@ -142,44 +142,70 @@ Planning Time: 0.774 ms
 Execution Time: 112.172 ms
 ```
 
-### POST /shoes/{shoe_id}/reviews/{rating_id}
+### POST /users/search
 ```
-Gather  (cost=1000.00..12637.63 rows=1 width=259) (actual time=0.387..28.669 rows=1 loops=1)
-  Workers Planned: 2
-  Workers Launched: 2
-  ->  Parallel Seq Scan on reviews  (cost=0.00..11637.53 rows=1 width=259) (actual time=13.667..22.792 rows=0 loops=3)
-        Filter: (rating_id = 38)
-        Rows Removed by Filter: 86816
-Planning Time: 0.098 ms
-Execution Time: 28.691 ms
------------------------------
-Delete on reviews  (cost=0.00..13536.67 rows=0 width=0) (actual time=42.800..42.800 rows=0 loops=1)
-  ->  Seq Scan on reviews  (cost=0.00..13536.67 rows=1 width=6) (actual time=42.798..42.799 rows=0 loops=1)
-        Filter: (rating_id = 324)
-        Rows Removed by Filter: 260449
-Planning Time: 0.198 ms
-Execution Time: 42.841 ms
+Limit  (cost=240.35..1442.12 rows=5 width=26) (actual time=11.675..26.201 rows=5 loops=1)
+  ->  Seq Scan on users  (cost=0.00..4086.00 rows=17 width=26) (actual time=10.801..26.197 rows=6 loops=1)
+"        Filter: ((username ~~* 'ian%'::text) OR (name ~~* 'ian%'::text))"
+        Rows Removed by Filter: 11157
+Planning Time: 2.085 ms
+Execution Time: 26.234 ms
 ```
-
-### POST /shoes/{shoe_id}/reviews/{user_id}
+CREATE INDEX tbl_name_gin_trgm_id ON users USING gin (name gin_trgm_ops);
 ```
-Gather  (cost=1000.00..5940.26 rows=1 width=16) (actual time=21.890..23.441 rows=0 loops=1)
-  Workers Planned: 1
-  Workers Launched: 1
-  ->  Parallel Seq Scan on shoes_to_users  (cost=0.00..4940.16 rows=1 width=16) (actual time=17.991..17.991 rows=0 loops=2)
-        Filter: ((user_id = 983) AND (shoe_id = 32))
-        Rows Removed by Filter: 173580
-Planning Time: 0.106 ms
-Execution Time: 23.460 ms
------------------------------
-Aggregate  (cost=7108.71..7108.72 rows=1 width=32) (actual time=23.905..24.585 rows=1 loops=1)
-  ->  Gather  (cost=1000.00..7108.71 rows=1 width=8) (actual time=23.901..24.581 rows=0 loops=1)
-        Workers Planned: 1
-        Workers Launched: 1
-        ->  Parallel Seq Scan on point_ledger  (cost=0.00..6108.61 rows=1 width=8) (actual time=19.979..19.979 rows=0 loops=2)
-"              Filter: ((point_change > 0) AND (user_id = 2334) AND (created_at >= (now() - '1 day'::interval)))"
-              Rows Removed by Filter: 148340
-Planning Time: 0.177 ms
-Execution Time: 24.615 ms
+Limit  (cost=77.03..95.94 rows=5 width=26) (actual time=0.185..0.212 rows=5 loops=1)
+  ->  Bitmap Heap Scan on users  (cost=73.25..137.54 rows=17 width=26) (actual time=0.176..0.209 rows=6 loops=1)
+"        Recheck Cond: ((username ~~* 'ian%'::text) OR (name ~~* 'ian%'::text))"
+        Heap Blocks: exact=6
+        ->  BitmapOr  (cost=73.25..73.25 rows=17 width=0) (actual time=0.140..0.141 rows=0 loops=1)
+              ->  Bitmap Index Scan on tbl_col_gin_trgm_id  (cost=0.00..43.01 rows=8 width=0) (actual time=0.043..0.043 rows=6 loops=1)
+"                    Index Cond: (username ~~* 'ian%'::text)"
+              ->  Bitmap Index Scan on tbl_name_gin_trgm_id  (cost=0.00..30.23 rows=8 width=0) (actual time=0.097..0.097 rows=83 loops=1)
+"                    Index Cond: (name ~~* 'ian%'::text)"
+Planning Time: 0.882 ms
+Execution Time: 0.253 ms
 ```
 
+### POST /shoes/search
+```
+Limit  (cost=13977.80..13978.01 rows=1 width=76) (actual time=17.657..17.658 rows=0 loops=1)
+  ->  GroupAggregate  (cost=13977.59..13977.80 rows=1 width=76) (actual time=17.655..17.657 rows=0 loops=1)
+        Group Key: shoes.shoe_id
+        ->  Sort  (cost=13977.59..13977.66 rows=26 width=48) (actual time=17.654..17.656 rows=0 loops=1)
+              Sort Key: shoes.shoe_id
+              Sort Method: quicksort  Memory: 25kB
+              ->  Hash Right Join  (cost=507.01..13976.98 rows=26 width=48) (actual time=17.622..17.624 rows=0 loops=1)
+                    Hash Cond: (reviews.shoe_id = shoes.shoe_id)
+                    ->  Seq Scan on reviews  (cost=0.00..12791.51 rows=258351 width=12) (never executed)
+                    ->  Hash  (cost=507.00..507.00 rows=1 width=44) (actual time=17.589..17.589 rows=0 loops=1)
+                          Buckets: 1024  Batches: 1  Memory Usage: 8kB
+                          ->  Seq Scan on shoes  (cost=0.00..507.00 rows=1 width=44) (actual time=17.588..17.588 rows=0 loops=1)
+"                                Filter: ((color ~~* 'red%'::text) AND (material ~~* 'canvas%'::text) AND (brand ~~* 'nike%'::text) AND (name ~~* 'boost%'::text) AND (price > '2'::double precision) AND (price < '290'::double precision))"
+                                Rows Removed by Filter: 10000
+Planning Time: 2.758 ms
+Execution Time: 18.150 ms
+```
+CREATE INDEX shoes_color_gin_trgm_id ON shoes USING gin (color gin_trgm_ops)
+
+```
+Limit  (cost=13779.89..13780.10 rows=1 width=76) (actual time=2.617..2.620 rows=0 loops=1)
+  ->  GroupAggregate  (cost=13779.68..13779.89 rows=1 width=76) (actual time=2.616..2.619 rows=0 loops=1)
+        Group Key: shoes.shoe_id
+        ->  Sort  (cost=13779.68..13779.75 rows=26 width=48) (actual time=2.614..2.617 rows=0 loops=1)
+              Sort Key: shoes.shoe_id
+              Sort Method: quicksort  Memory: 25kB
+              ->  Hash Right Join  (cost=309.10..13779.07 rows=26 width=48) (actual time=2.603..2.606 rows=0 loops=1)
+                    Hash Cond: (reviews.shoe_id = shoes.shoe_id)
+                    ->  Seq Scan on reviews  (cost=0.00..12791.51 rows=258351 width=12) (never executed)
+                    ->  Hash  (cost=309.09..309.09 rows=1 width=44) (actual time=2.593..2.594 rows=0 loops=1)
+                          Buckets: 1024  Batches: 1  Memory Usage: 8kB
+                          ->  Bitmap Heap Scan on shoes  (cost=32.26..309.09 rows=1 width=44) (actual time=2.592..2.592 rows=0 loops=1)
+"                                Recheck Cond: (color ~~* 'red%'::text)"
+"                                Filter: ((material ~~* 'canvas%'::text) AND (brand ~~* 'nike%'::text) AND (name ~~* 'boost%'::text) AND (price > '2'::double precision) AND (price < '290'::double precision))"
+                                Rows Removed by Filter: 427
+                                Heap Blocks: exact=210
+                                ->  Bitmap Index Scan on shoes_color_gin_trgm_id  (cost=0.00..32.26 rows=427 width=0) (actual time=0.205..0.205 rows=427 loops=1)
+"                                      Index Cond: (color ~~* 'red%'::text)"
+Planning Time: 0.817 ms
+Execution Time: 2.823 ms
+```
