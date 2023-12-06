@@ -17,11 +17,13 @@ def get_shoe_catalog():
     """ """
     with db.engine.begin() as connection:
         catalog = connection.execute(sqlalchemy.text
-        ("""select shoes.shoe_id,name,brand,AVG(rating) as avg  
-            from shoes TABLESAMPLE SYSTEM (1)
+        ("""SELECT shoes.shoe_id,name,brand,AVG(rating) as avg
+            FROM shoes 
             LEFT JOIN reviews ON shoes.shoe_id = reviews.shoe_id
             GROUP BY shoes.shoe_id
-            limit 10
+            ORDER BY RANDOM()
+            LIMIT 10;
+
 """))
     ret = []
     for shoe in catalog:
