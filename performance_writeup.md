@@ -4,20 +4,20 @@ https://github.com/loganjsch/solemate/blob/api-branch/population/populate.py
 
 ## Row Breakdown:
 
-total rows: 1069534
+### total rows: 1069534
 
-brands:13
-shoes: 10000
-users: 85000
-shoes_to_users: 348418
-reviews: 261075
-points: 302328
-orders: 252
-raffle_entries: 61944
-raffles: 156
-prizes: 156
-prize_cart_items: 96
-prize_carts: 96
+- brands: 13
+- shoes: 10000
+- users: 85000
+- shoes_to_users: 348418
+- reviews: 261075
+- points: 302328
+- orders: 252
+- raffle_entries: 61944
+- raffles: 156
+- prizes: 156
+- prize_cart_items: 96
+- prize_carts: 96
 
 ## Explanations:
 
