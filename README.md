@@ -12,7 +12,7 @@ lschwa06@calpoly.edu
 Rohit Bathula
 rbathula@calpoly.edu
 
-Ian McCurry 
+Ian McCurry
 imccurry@calpoly.edu
 
 
